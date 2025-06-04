@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Proceso de Compra en 3 Pasos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Font Awesome para íconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #2bb93b;
+      --secondary-color: #004f2c;
+      --accent-color: #ff4757;
+      --bg-color: #b2fff630;
+      --white: #ffffff;
+      --text-color: #333;
+    }
+    /* RESET */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: var(--bg-color); color: var(--text-color); line-height: 1.6; }
+    h1, h2, h3 { font-weight: bold; }
+    button { cursor: pointer; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    
+    /* Encabezado */
+    .checkout-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .checkout-header h1 {
+      font-size: 2.8rem;
+      color: #000000;
+      margin-bottom: 10px;
+    }
+    .checkout-header p {
+      font-size: 1.2rem;
+      color: #000000
+    }
+    
+    /* PASOS */
+    .step {
+      display: none;
+      background: var(--white);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .step.active { display: block; }
+    
+    /* STEP 1: DATOS DE USUARIO */
+    #step1 label { display: block; margin-bottom: 8px; font-weight: bold; }
+    #step1 input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    #step1 .note {
+      font-size: 0.9rem;
+      color: #777;
+      margin-bottom: 15px;
+    }
+    #step1 button {
+      background: var(--primary-color);
+      color: var(--white);
+      padding: 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+    #step1 button:hover { background: var(--secondary-color); }
+    
+    /* STEP 2: INFORMACIÓN DE ENVÍO */
+    #step2 .direccion-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+    }
+    #step2 .direccion-header i { font-size: 1.5rem; }
+    #step2 form { display: flex; flex-direction: column; gap: 15px; }
+    #step2 .form-group { display: flex; flex-direction: column; }
+    #step2 .form-group label { margin-bottom: 5px; font-weight: bold; }
+    #step2 .form-group input,
+    #step2 .form-group select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    #step2 .form-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    #step2 .form-actions button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+      margin: 0 5px;
+    }
+    #step2 .form-actions button:first-child { background: var(--accent-color); color: var(--white); }
+    #step2 .form-actions button:last-child { background: var(--primary-color); color: var(--white); }
+    #step2 .form-actions button:hover:last-child { background: var(--secondary-color); }
+    
+    /* STEP 3: MÉTODOS DE PAGO */
+    .payment-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .payment-option {
+      background: #84dc4b12;
+      border: 1px solid #000000;
+      border-radius: 8px;
+      padding: 20px;
+      width: 300px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .payment-option:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+    .payment-option.selected {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 10px rgba(0,104,55,0.3);
+    }
+    .payment-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+    .payment-header i {
+      font-size: 2rem;
+      color: var(--primary-color);
+    }
+    .payment-header h3 {
+      font-size: 1.2rem;
+      color: #333;
+    }
+    .payment-option form,
+    .payment-option div {
+      margin-top: 10px;
+    }
+    .payment-option button {
+      width: 100%;
+      margin-top: 10px;
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .payment-option button:hover {
+      background-color: var(--secondary-color);
+    }
+    @media (max-width: 768px) {
+      .payment-options {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+    
+    /* Nuevo: Centrar imagen de Yape */
+    #yape-info img {
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Encabezado del Proceso de Compra -->
+    <div class="checkout-header">
+      <h1>Proceso de Compra en 3 Pasos</h1>
+      <p>Completa la información para finalizar tu compra</p>
+    </div>
+    
+    <!-- Paso 1: Carro y Datos de Usuario -->
+    <div id="step1" class="step active">
+      <h2>Paso 1: Carro y Datos de Usuario</h2>
+      <label for="email">Correo Electrónico:</label>
+      <input type="email" id="email" placeholder="Ingresa tu correo electrónico" required>
+      <p class="note">Nota: Este campo se ocultará una vez ingresada la información.</p>
+      <button id="btn-step1">Continuar</button>
+    </div>
+    
+    <!-- Paso 2: Información de Envío -->
+    <div id="step2" class="step">
+      <h2>Paso 2: Información de Envío</h2>
+      <div class="direccion-header">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>Ingresa tu dirección para ver las opciones de entrega y retiro.</span>
+      </div>
+      <form id="direccion-form">
+        <div class="form-group">
+          <label for="departamento">Departamento:</label>
+          <select id="departamento" required>
+            <option value="">Seleccione un departamento</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="provincia">Provincia:</label>
+          <select id="provincia" required>
+            <option value="">Seleccione una provincia</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="distrito">Distrito:</label>
+          <select id="distrito" required>
+            <option value="">Seleccione un distrito</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="calle">Avenida/Calle/Jirón:</label>
+          <input type="text" id="calle" required>
+        </div>
+        <div class="form-group">
+          <label for="numero">Número:</label>
+          <input type="text" id="numero" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" id="btn-descartar">Descartar cambios</button>
+          <button type="button" id="btn-confirmar-direccion">Confirmar dirección</button>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Paso 3: Métodos de Pago -->
+<div id="step3" class="step">
+  <h2 class="text-center text-2xl font-bold mb-6 text-gray-800">Paso 3: Métodos de Pago</h2>
+  
+  <div class="payment-options grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+    <!-- Opción 1: Tarjetas de Crédito -->
+    <div class="payment-option bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:border-blue-500 transition-all" id="option-credito">
+      <div class="payment-header bg-gradient-to-r from-blue-600 to-blue-800 text-white p-4 flex items-center cursor-pointer">
+        <img src="../img/vector_1.jpg" alt="Tarjetas de Crédito" class="mr-3 rounded bg-white p-2" style="width: 40px; height: 40px;">
+        <h3 class="font-semibold text-lg">Tarjetas de Crédito</h3>
+      </div>
+      
+      <div id="form-credito" class="p-5 bg-gray-50 text-center" style="display: none;">
+        <!-- Encabezado con logo centrado -->
+        <div class="mb-4 flex justify-center">
+          <img src="../img/vector.jpeg" alt="Tarjetas Logo" style="height: 60px; width: auto;">
+        </div>
+        
+        <div class="flex flex-wrap justify-center mb-4">
+          <img src="../img/visa.jpg" alt="Visa" class="mx-2 rounded shadow-sm" style="height: 40px; width: auto;">
+          <img src="../img/mastercard.jpg" alt="MasterCard" class="mx-2 rounded shadow-sm" style="height: 40px; width: auto;">
+          <img src="../img/american-express.jpg" alt="American Express" class="mx-2 rounded shadow-sm" style="height: 40px; width: auto;">
+        </div>
+        
+        <div class="form-group mb-4">
+          <label for="card-number" class="block text-gray-700 mb-1 font-medium">Número de Tarjeta:</label>
+          <input type="text" id="card-number" placeholder="XXXX-XXXX-XXXX-XXXX" pattern="\d{16}" title="Debe tener 16 dígitos" 
+                 class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="card-expiry" class="block text-gray-700 mb-1 font-medium">Fecha de Expiración:</label>
+            <input type="text" id="card-expiry" placeholder="MM/AA" pattern="(0[1-9]|1[0-2])\/\d{2}" title="Formato MM/AA" 
+                   class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="card-cvv" class="block text-gray-700 mb-1 font-medium">CVV:</label>
+            <input type="text" id="card-cvv" placeholder="XXX" pattern="\d{3}" title="Debe tener 3 dígitos" 
+                   class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+          </div>
+        </div>
+        
+        <button type="button" id="btn-pagar-credito" 
+                class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors">
+          Pagar con Tarjeta <i class="fas fa-lock ml-1"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Opción 2: PayPal -->
+    <div class="payment-option bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:border-indigo-500 transition-all" id="option-paypal">
+      <div class="payment-header bg-gradient-to-r from-indigo-600 to-indigo-800 text-white p-4 flex items-center cursor-pointer">
+        <img src="../img/paypal-vector.jpg" alt="PayPal" class="mr-3 rounded bg-white p-2" style="width: 40px; height: 40px;">
+        <h3 class="font-semibold text-lg">PayPal</h3>
+      </div>
+      
+      <div id="paypal-info" class="p-5 bg-gray-50 text-center" style="display: none;">
+        <!-- Encabezado con logo centrado -->
+        <div class="mb-4 flex justify-center">
+          <img src="../img/Paypal.png" alt="PayPal Logo" style="height: 60px; width: auto;">
+        </div>
+        
+        <p class="mb-4 text-gray-700">Paga de forma rápida y segura con tu cuenta PayPal.</p>
+        
+        <!-- Contenedor específico para el botón -->
+        <div class="flex justify-center my-4">
+          <button type="button" id="btn-pagar-paypal" 
+                  class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded transition-colors">
+            Pagar con PayPal <i class="fas fa-external-link-alt ml-1"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Opción 3: Yape -->
+    <div class="payment-option bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:border-purple-500 transition-all" id="option-yape">
+      <div class="payment-header bg-gradient-to-r from-purple-600 to-purple-800 text-white p-4 flex items-center cursor-pointer">
+        <img src="../img/yape.png" alt="Yape" class="mr-3 rounded bg-white p-2" style="width: 40px; height: 40px;">
+        <h3 class="font-semibold text-lg">Yape</h3>
+      </div>
+      
+      <div id="yape-info" class="p-5 bg-gray-50 text-center" style="display: none;">
+        <!-- Encabezado con logo centrado -->
+        <div class="mb-4 flex justify-center">
+          <img src="../img/yape.png" alt="Yape Logo" style="height: 60px; width: auto;">
+        </div>
+        
+        <p class="mb-3 text-gray-700">Número de cuenta: <strong class="text-purple-700">983624067</strong></p>
+        <p class="mb-2 text-gray-700">Escanea el código QR para pagar:</p>
+        
+        <!-- Contenedor específico para el QR -->
+        <div class="flex justify-center my-4">
+          <img src="../img/QR.jpg" alt="Código QR Yape" style="max-width: 180px; height: auto; margin: 0 auto; display: block; border: 1px solid #eaeaea; padding: 8px; background-color: white; border-radius: 8px;">
+        </div>
+        
+        <p class="text-sm text-gray-600 mt-3">Envía el comprobante de pago a nuestro WhatsApp</p>
+      </div>
+      <div class="social-links">
+        <a href="https://wa.me/51983624067?text=Hola,%20adjunto%20mi%20captura%20de%20pantalla%20del%20comprobante%20de%20pago" target="_blank" class="whatsapp-link">
+          <i class="fab fa-whatsapp fa-2x"></i>
+          <span class="whatsapp-text">Enviar captura de pantalla</span>
+        </a>
+      </div>
+      </div>
+      </div>
+      
+      <style>
+      .whatsapp-link {
+        display: flex;
+        align-items: center;
+        background-color: #25D366;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+      }
+      
+      .whatsapp-link:hover {
+        background-color: #128C7E;
+      }
+      
+      .whatsapp-text {
+        margin-left: 10px;
+        font-weight: bold;
+      }
+      
+      .fa-whatsapp {
+        font-size: 24px;
+      }
+      </style>
+
+    
+<!-- Botón de Navegación de Pasos -->
+<div class="nav-steps">
+  <div class="flex justify-center items-center space-x-6 my-8 max-w-4xl mx-auto">
+    <button id="btn-volver-step1" class="nav-button nav-button-blue flex items-center px-6 py-3 text-white rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-105 focus:outline-none" style="display:none;">
+      <i class="fas fa-chevron-circle-left mr-2 text-xl"></i> Volver al Paso 1
+    </button>
+    <button id="btn-volver-step2" class="nav-button nav-button-purple flex items-center px-6 py-3 text-white rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-105 focus:outline-none" style="display:none;">
+      <i class="fas fa-chevron-circle-left mr-2 text-xl"></i> Volver al Paso 2
+    </button>
+  </div>
+</div>
+
+<!-- Estilos CSS adicionales -->
+<style>
+  .nav-steps {
+    position: relative;
+    padding: 20px 0;
+    background: linear-gradient(to right, rgba(250, 250, 250, 0.8), rgba(255, 255, 255, 0.9), rgba(250, 250, 250, 0.8));
+    border-radius: 15px;
+    margin: 25px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .nav-button {
+    position: relative;
+    overflow: hidden;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    min-width: 200px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .nav-button-blue {
+    background: linear-gradient(45deg, #2196F3, #4FC3F7, #00BCD4);
+    background-size: 200% 200%;
+    animation: gradientShift 5s ease infinite;
+  }
+  
+  .nav-button-purple {
+    background: linear-gradient(45deg, #9C27B0, #BA68C8, #E040FB);
+    background-size: 200% 200%;
+    animation: gradientShift 5s ease infinite;
+  }
+  
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  .nav-button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -100%;
+    width: 70%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: rotate(25deg);
+    transition: all 0.8s;
+  }
+  
+  .nav-button:hover::after {
+    left: 150%;
+    transition: all 0.8s;
+  }
+  
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .nav-button.visible {
+    display: flex !important;
+    animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+  
+  /* Efectos adicionales */
+  .nav-steps::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 10%;
+    right: 10%;
+    height: 10px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8), transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  }
+  
+  /* Efecto pulsante para llamar la atención */
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  .nav-button.pulse {
+    animation: pulse 2s infinite;
+  }
+</style>
+
+<!-- JavaScript para mejorar la interactividad -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Elementos de navegación
+  const btnVolverStep1 = document.getElementById('btn-volver-step1');
+  const btnVolverStep2 = document.getElementById('btn-volver-step2');
+  
+  // Referencias a los pasos
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const step3 = document.getElementById('step3');
+  
+  // Función para mostrar un botón con animación
+  function showButton(button) {
+    button.style.display = 'flex';
+    setTimeout(() => {
+      button.classList.add('visible');
+      // Agregar efecto pulsante después de aparecer
+      setTimeout(() => {
+        button.classList.add('pulse');
+        setTimeout(() => {
+          button.classList.remove('pulse');
+        }, 3000);
+      }, 800);
+    }, 10);
+  }
+  
+  // Función para navegar entre pasos con efectos visuales
+  function navigateToStep(stepToShow) {
+    // Efecto de desvanecimiento para todos los pasos
+    [step1, step2, step3].forEach(step => {
+      if (step) {
+        step.style.opacity = '0';
+        step.style.transition = 'opacity 0.4s ease';
+      }
+    });
+    
+    // Esperar a que se complete el desvanecimiento
+    setTimeout(() => {
+      // Ocultar todos los pasos
+      [step1, step2, step3].forEach(step => {
+        if (step) step.style.display = 'none';
+      });
+      
+      // Mostrar el paso seleccionado
+      if (stepToShow) {
+        stepToShow.style.display = 'block';
+        // Forzar el redibujado
+        void stepToShow.offsetWidth;
+        
+        // Restaurar la opacidad para el efecto de aparición
+        setTimeout(() => {
+          stepToShow.style.opacity = '1';
+        }, 10);
+        
+        // Desplazarse suavemente hasta el paso
+        window.scrollTo({
+          top: stepToShow.offsetTop - 40,
+          behavior: 'smooth'
+        });
+      }
+      
+      // Actualizar visibilidad de los botones de navegación con animaciones
+      if (stepToShow === step1) {
+        btnVolverStep1.style.display = 'none';
+        btnVolverStep2.style.display = 'none';
+      } else if (stepToShow === step2) {
+        showButton(btnVolverStep1);
+        btnVolverStep2.style.display = 'none';
+      } else if (stepToShow === step3) {
+        showButton(btnVolverStep1);
+        showButton(btnVolverStep2);
+      }
+    }, 400); // Tiempo igual a la duración de la transición
+  }
+  
+  // Agregar oyentes de eventos para la navegación con efectos sonoros
+  btnVolverStep1.addEventListener('click', function() {
+    // Efecto de clic
+    this.style.transform = 'scale(0.95)';
+    setTimeout(() => { this.style.transform = ''; }, 200);
+    
+    navigateToStep(step1);
+  });
+  
+  btnVolverStep2.addEventListener('click', function() {
+    // Efecto de clic
+    this.style.transform = 'scale(0.95)';
+    setTimeout(() => { this.style.transform = ''; }, 200);
+    
+    navigateToStep(step2);
+  });
+  
+  // Detectar en qué paso estamos inicialmente
+  function detectCurrentStep() {
+    if (step3 && window.getComputedStyle(step3).display !== 'none') {
+      showButton(btnVolverStep1);
+      showButton(btnVolverStep2);
+    } else if (step2 && window.getComputedStyle(step2).display !== 'none') {
+      showButton(btnVolverStep1);
+    }
+  }
+  
+  // Añadir efectos hover más llamativos
+  [btnVolverStep1, btnVolverStep2].forEach(btn => {
+    if(!btn) return;
+    
+    btn.addEventListener('mouseover', function() {
+      this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+    });
+    
+    btn.addEventListener('mouseout', function() {
+      this.style.boxShadow = '';
+    });
+  });
+  
+  // Ejecutar la detección inicial
+  setTimeout(detectCurrentStep, 300);
+});
+</script>
+  
+  <script>
+    // Datos completos de departamentos, provincias y distritos de Perú
+    const locationData = {
+      "Amazonas": {
+        "Chachapoyas": ["Chachapoyas", "Asunción", "Balsas", "Cheto", "Chiliquín", "Chuquibamba", "Granada", "Huancas", "La Jalca", "Leimebamba", "Levanto", "Magdalena", "Mariscal Castilla", "Molinopampa", "Montevideo", "Olleros", "Quinjalca", "San Francisco de Daguas", "San Isidro de Maino", "Soloco", "Sonche"],
+        "Bagua": ["Bagua", "Aramango", "Copallín", "El Parco", "Imaza", "La Peca"],
+        "Bongará": ["Jumbilla", "Chisquilla", "Churuja", "Corosha", "Cuispes", "Florida", "Jazán", "Recta", "San Carlos", "Shipasbamba", "Valera", "Yambrasbamba"],
+        "Condorcanqui": ["Nieva", "El Cenepa", "Río Santiago"],
+        "Luya": ["Lamud", "Camporredondo", "Cocabamba", "Colcamar", "Conila", "Inguilpata", "Longuita", "Lonya Chico", "Luya", "Luya Viejo", "María", "Ocallí", "Ocumal", "Pisuquía", "Providencia", "San Cristóbal", "San Francisco del Yeso", "San Jerónimo", "San Juan de Lopecancha", "Santa Catalina", "Santo Tomás", "Tingo", "Trita"],
+        "Rodríguez de Mendoza": ["San Nicolás", "Chirimoto", "Cochamal", "Huambo", "Limabamba", "Longar", "Mariscal Benavides", "Milpuc", "Omia", "Santa Rosa", "Totora", "Vista Alegre"],
+        "Utcubamba": ["Bagua Grande", "Cajaruro", "Cumba", "El Milagro", "Jamalca", "Lonya Grande", "Yamon"]
+      },
+      "Áncash": {
+        "Huaraz": ["Huaraz", "Cochabamba", "Colcabamba", "Huanchay", "Independencia", "Jangas", "La Libertad", "Olleros", "Pampas Grande", "Pariacoto", "Pira", "Tarica"],
+        "Aija": ["Aija", "Coris", "Huacllán", "La Merced", "Succha"],
+        "Antonio Raymondi": ["Llamellín", "Aczo", "Chaccho", "Chingas", "Mirgas", "San Juan de Rontoy"],
+        "Asunción": ["Chacas", "Acochaca"],
+        "Bolognesi": ["Chiquián", "Abelardo Pardo Lezameta", "Antonio Raymondi", "Aquia", "Cajacay", "Canis", "Colquioc", "Huallanca", "Huasta", "Huayllacayán", "La Primavera", "Mangas", "Pacllón", "San Miguel de Corpanqui", "Ticllos"],
+        "Carhuaz": ["Carhuaz", "Acopampa", "Amashca", "Anta", "Ataquero", "Marcará", "Pariahuanca", "San Miguel de Aco", "Shilla", "Tinco", "Yungar"],
+        "Carlos Fermín Fitzcarrald": ["San Luis", "San Nicolás", "Yauya"],
+        "Casma": ["Casma", "Buena Vista Alta", "Comandante Noel", "Yaután"],
+        "Corongo": ["Corongo", "Aco", "Bambas", "Cusca", "La Pampa", "Yánac", "Yupán"],
+        "Huari": ["Huari", "Anra", "Cajay", "Chavín de Huantar", "Huacachi", "Huacchis", "Huachis", "Huantar", "Masin", "Paucas", "Ponto", "Rahuapampa", "Rapayán", "San Marcos", "San Pedro de Chaná", "Uco"],
+        "Huarmey": ["Huarmey", "Cochapeti", "Culebras", "Huayan", "Malvas"],
+        "Huaylas": ["Caraz", "Huallanca", "Huata", "Huaylas", "Mato", "Pamparomás", "Pueblo Libre", "Santa Cruz", "Santo Toribio", "Yuracmarca"],
+        "Mariscal Luzuriaga": ["Piscobamba", "Casca", "Eleazar Guzmán Barrón", "Fidel Olivas Escudero", "Llama", "Llumpa", "Lucma", "Musga"],
+        "Ocros": ["Ocros", "Acas", "Cajamarquilla", "Carhuapampa", "Cochas", "Congas", "Llipa", "San Cristóbal de Rajan", "San Pedro", "Santiago de Chilcas"],
+        "Pallasca": ["Cabana", "Bolognesi", "Conchucos", "Huacaschuque", "Huandoval", "Lacabamba", "Llapo", "Pallasca", "Pampas", "Santa Rosa", "Tauca"],
+        "Pomabamba": ["Pomabamba", "Huayllán", "Parobamba", "Quinuabamba"],
+        "Recuay": ["Recuay", "Catac", "Cotaparaco", "Huayllapampa", "Llacllín", "Marca", "Pampas Chico", "Pararín", "Tapacocha", "Ticapampa"],
+        "Santa": ["Chimbote", "Cáceres del Perú", "Coishco", "Macate", "Moro", "Nepeña", "Samanco", "Santa", "Nuevo Chimbote"],
+        "Sihuas": ["Sihuas", "Acobamba", "Alfonso Ugarte", "Cashapampa", "Chingalpo", "Huayllabamba", "Quiches", "Ragash", "San Juan", "Sicsibamba"],
+        "Yungay": ["Yungay", "Cascapara", "Mancos", "Matacoto", "Quillo", "Ranrahirca", "Shupluy", "Yanama"]
+      },
+      "Apurímac": {
+        "Abancay": ["Abancay", "Chacoche", "Circa", "Curahuasi", "Huanipaca", "Lambrama", "Pichirhua", "San Pedro de Cachora", "Tamburco"],
+        "Andahuaylas": ["Andahuaylas", "Andarapa", "Chiara", "Huancarama", "Huancaray", "Huayana", "Kishua", "Pacobamba", "Pacucha", "Pampachiri", "Pomacocha", "San Antonio de Cachi", "San Jerónimo", "San Miguel de Chaccrampa", "Santa María de Chicmo", "Talavera", "Tumay Huaraca", "Turpo", "Kaquiabamba"],
+        "Antabamba": ["Antabamba", "El Oro", "Huaquirca", "Juan Espinoza Medrano", "Oropesa", "Pachaconas", "Sabaino"],
+        "Aymaraes": ["Chalhuanca", "Capaya", "Caraybamba", "Chapimarca", "Colcabamba", "Cotaruse", "Huayllo", "Justo Apu Sahuaraura", "Lucre", "Pocohuanca", "San Juan de Chacña", "Sañayca", "Soraya", "Tapairihua", "Tintay", "Toraya", "Yanaca"],
+        "Cotabambas": ["Tambobamba", "Cotabambas", "Coyllurqui", "Haquira", "Mara", "Chalhuahuacho"],
+        "Chincheros": ["Chincheros", "Anco-Huallo", "Cocharcas", "Huaccana", "Ocobamba", "Ongoy", "Uranmarca", "Ranracancha"],
+        "Grau": ["Chuquibambilla", "Curasco", "Curpahuasi", "Gamarra", "Huayllati", "Mamara", "Micaela Bastidas", "Pataypampa", "Progreso", "San Antonio", "Santa Rosa", "Turpay", "Vilcabamba", "Virundo"]
+      },
+      "Arequipa": {
+        "Arequipa": ["Arequipa", "Alto Selva Alegre", "Cayma", "Cerro Colorado", "Characato", "Chiguata", "Jacobo Hunter", "José Luis Bustamante y Rivero", "La Joya", "Mariano Melgar", "Miraflores", "Mollebaya", "Paucarpata", "Pocsi", "Polobaya", "Quequeña", "Sabandía", "Sachaca", "San Juan de Siguas", "San Juan de Tarucani", "Santa Isabel de Siguas", "Santa Rita de Siguas", "Socabaya", "Tiabaya", "Uchumayo", "Vitor", "Yanahuara", "Yarabamba", "Yura"],
+        "Camaná": ["Camaná", "José María Quimper", "Mariano Nicolás Valcárcel", "Mariscal Cáceres", "Nicolás de Piérola", "Ocoña", "Quilca", "Samuel Pastor"],
+        "Caravelí": ["Caravelí", "Acari", "Atico", "Atiquipa", "Bella Unión", "Cahuacho", "Chala", "Chaparra", "Huanuhuanu", "Jaqui", "Lomas", "Quicacha", "Yauca"],
+        "Castilla": ["Aplao", "Andagua", "Chachas", "Chilcaymarca", "Choco", "Huancarqui", "Machaguay", "Orcopampa", "Pampacolca", "Tipán", "Uñón", "Uraca", "Viraco"],
+        "Caylloma": ["Chivay", "Achoma", "Cabanaconde", "Callalli", "Caylloma", "Coporaque", "Huambo", "Huanca", "Ichupampa", "Lari", "Lluta", "Maca", "Madrigal", "Majes", "San Antonio de Chuca", "Sibayo", "Tapay", "Tisco", "Tuti", "Yanque"],
+        "Condesuyos": ["Chuquibamba", "Andaray", "Cayarani", "Chichas", "Iray", "Río Grande", "Salamanca", "Yanaquihua"],
+        "Islay": ["Mollendo", "Cocachacra", "Dean Valdivia", "Islay", "Mejía", "Punta de Bombón"],
+        "La Unión": ["Cotahuasi", "Alca", "Charcana", "Huaynacotas", "Pampamarca", "Puyca", "Quechualla", "Sayla", "Tauria", "Tomepampa", "Toro"]
+      },
+      "Ayacucho": {
+        "Huamanga": ["Ayacucho", "Acocro", "Acos Vinchos", "Carmen Alto", "Chiara", "Jesús Nazareno", "Ocros", "Pacaycasa", "Quinua", "San José de Ticllas", "San Juan Bautista", "Santiago de Pischa", "Socos", "Tambillo", "Vinchos"],
+        "Cangallo": ["Cangallo", "Chuschi", "Los Morochucos", "María Parado de Bellido", "Paras", "Totos"],
+        "Huanca Sancos": ["Sancos", "Carapo", "Sacsamarca", "Santiago de Lucanamarca"],
+        "Huanta": ["Huanta", "Ayahuanco", "Huamanguilla", "Iguain", "Llochegua", "Luricocha", "Santillana", "Sivia", "Canayre", "Uchuraccay", "Pucacolpa"],
+        "La Mar": ["San Miguel", "Anco", "Ayna", "Chilcas", "Chungui", "Luis Carranza", "Santa Rosa", "Tambo", "Samugari"],
+        "Lucanas": ["Puquio", "Aucara", "Cabana", "Carmen Salcedo", "Chaviña", "Chipao", "Huac-Huas", "Laramate", "Leoncio Prado", "Llauta", "Lucanas", "Ocaña", "Otoca", "Saisa", "San Cristóbal", "San Juan", "San Pedro", "San Pedro de Palco", "Sancos", "Santa Ana de Huaycahuacho", "Santa Lucía"],
+        "Parinacochas": ["Coracora", "Chumpi", "Coronel Castañeda", "Pacapausa", "Pullo", "Puyusca", "San Francisco de Ravacayco", "Upahuacho"],
+        "Páucar del Sara Sara": ["Pausa", "Colta", "Corculla", "Lampa", "Marcabamba", "Oyolo", "Pararca", "San Javier de Alpabamba", "San José de Ushua", "Sara Sara"],
+        "Sucre": ["Querobamba", "Belén", "Chalcos", "Chilcayoc", "Huacaña", "Morcolla", "Paico", "San Pedro de Larcay", "San Salvador de Quije", "Santiago de Paucaray", "Soras"],
+        "Víctor Fajardo": ["Huancapi", "Alcamenca", "Apongo", "Asquipata", "Canaria", "Cayara", "Colca", "Huamanquiquia", "Huancaraylla", "Huaya", "Sarhua", "Vilcanchos"],
+        "Vilcas Huamán": ["Vilcas Huamán", "Accomarca", "Carhuanca", "Concepción", "Huambalpa", "Independencia", "Saurama", "Vischongo"]
+      },
+      "Cajamarca": {
+        "Cajamarca": ["Cajamarca", "Asunción", "Chetilla", "Cospan", "Encañada", "Jesús", "Llacanora", "Los Baños del Inca", "Magdalena", "Matara", "Namora", "San Juan"],
+        "Cajabamba": ["Cajabamba", "Cachachi", "Condebamba", "Sitacocha"],
+        "Celendín": ["Celendín", "Chumuch", "Cortegana", "Huasmin", "Jorge Chávez", "José Gálvez", "Miguel Iglesias", "Oxamarca", "Sorochuco", "Sucre", "Utco", "La Libertad de Pallán"],
+        "Chota": ["Chota", "Anguia", "Chadin", "Chiguirip", "Chimban", "Choropampa", "Cochabamba", "Conchan", "Huambos", "Lajas", "Llama", "Miracosta", "Paccha", "Pion", "Querocoto", "San Juan de Licupis", "Tacabamba", "Tocmoche", "Chalamarca"],
+        "Contumazá": ["Contumazá", "Chilete", "Cupisnique", "Guzmango", "San Benito", "Santa Cruz de Toledo", "Tantarica", "Yonan"],
+        "Cutervo": ["Cutervo", "Callayuc", "Choros", "Cujillo", "La Ramada", "Pimpingos", "Querocotillo", "San Andrés de Cutervo", "San Juan de Cutervo", "San Luis de Lucma", "Santa Cruz", "Santo Domingo de la Capilla", "Santo Tomás", "Socota", "Toribio Casanova"],
+        "Hualgayoc": ["Bambamarca", "Chugur", "Hualgayoc"],
+        "Jaén": ["Jaén", "Bellavista", "Chontali", "Colasay", "Huabal", "Las Pirias", "Pomahuaca", "Pucará", "Sallique", "San Felipe", "San José del Alto", "Santa Rosa"],
+        "San Ignacio": ["San Ignacio", "Chirinos", "Huarango", "La Coipa", "Namballe", "San José de Lourdes", "Tabaconas"],
+        "San Marcos": ["San Marcos", "Chanchan", "Eduardo Villanueva", "Gregorio Pita", "Ichocan", "José Manuel Quiroz", "José Sabogal"],
+        "San Miguel": ["San Miguel", "Bolívar", "Calquis", "Catilluc", "El Prado", "La Florida", "Llapa", "Nanchoc", "Niepos", "San Gregorio", "San Silvestre de Cochan", "Tongod", "Unión Agua Blanca"],
+        "San Pablo": ["San Pablo", "San Bernardino", "San Luis", "Tumbaden"],
+        "Santa Cruz": ["Santa Cruz", "Andabamba", "Catache", "Chancaybaños", "La Esperanza", "Ninabamba", "Pulan", "Saucepampa", "Sexi", "Uticyacu", "Yauyucan"]
+      },
+      "Cusco": {
+        "Cusco": ["Cusco", "Ccorca", "Poroy", "San Jerónimo", "San Sebastián", "Santiago", "Saylla", "Wanchaq"],
+        "Acomayo": ["Acomayo", "Acopia", "Acos", "Mosoc Llacta", "Pomacanchi", "Rondocan", "Sangarará"],
+        "Anta": ["Anta", "Ancahuasi", "Cachimayo", "Chinchaypujio", "Huarocondo", "Limatambo", "Mollepata", "Pucyura", "Zurite"],
+        "Calca": ["Calca", "Coya", "Lamay", "Lares", "Pisac", "San Salvador", "Taray", "Yanatile"],
+        "Canas": ["Yanaoca", "Checca", "Kunturkanki", "Langui", "Layo", "Pampamarca", "Quehue", "Túpac Amaru"],
+        "Canchis": ["Sicuani", "Checacupe", "Combapata", "Marangani", "Pitumarca", "San Pablo", "San Pedro", "Tinta"],
+        "Chumbivilcas": ["Santo Tomás", "Capacmarca", "Chamaca", "Colquemarca", "Livitaca", "Llusco", "Quiñota", "Velille"],
+        "Espinar": ["Espinar", "Condoroma", "Coporaque", "Ocoruro", "Pallpata", "Pichigua", "Suyckutambo", "Alto Pichigua"],
+        "La Convención": ["Santa Ana", "Echarate", "Huayopata", "Maranura", "Ocobamba", "Quellouno", "Kimbiri", "Santa Teresa", "Vilcabamba", "Pichari", "Inkawasi", "Villa Virgen", "Villa Kintiarina", "Megantoni"],
+        "Paruro": ["Paruro", "Accha", "Ccapi", "Colcha", "Huanoquite", "Omacha", "Paccaritambo", "Pillpinto", "Yaurisque"],
+        "Paucartambo": ["Paucartambo", "Caicay", "Challabamba", "Colquepata", "Huancarani", "Kosñipata"],
+        "Quispicanchi": ["Urcos", "Andahuaylillas", "Camanti", "Ccarhuayo", "Ccatca", "Cusipata", "Huaro", "Lucre", "Marcapata", "Ocongate", "Oropesa", "Quiquijana"],
+        "Urubamba": ["Urubamba", "Chinchero", "Huayllabamba", "Machupicchu", "Maras", "Ollantaytambo", "Yucay"]
+      },
+      "Huancavelica": {
+        "Huancavelica": ["Huancavelica", "Acobambilla", "Acoria", "Conayca", "Cuenca", "Huachocolpa", "Huando", "Huayllahuara", "Izcuchaca", "Laria", "Manta", "Mariscal Cáceres", "Moya", "Nuevo Occoro", "Palca", "Pilchaca", "Vilca", "Yauli", "Ascensión"],
+        "Acobamba": ["Acobamba", "Andabamba", "Anta", "Caja", "Marcas", "Paucara", "Pomacocha", "Rosario"],
+        "Angaraes": ["Lircay", "Anchonga", "Callanmarca", "Ccochaccasa", "Chincho", "Congalla", "Huanca-Huanca", "Huayllay Grande", "Julcamarca", "San Antonio de Antaparco", "Santo Tomás de Pata", "Secclla"],
+        "Castrovirreyna": ["Castrovirreyna", "Arma", "Aurahua", "Capillas", "Chupamarca", "Cocas", "Huachos", "Huamatambo", "Mollepampa", "San Juan", "Santa Ana", "Tantara", "Ticrapo"],
+        "Churcampa": ["Churcampa", "Anco", "Chinchihuasi", "El Carmen", "La Merced", "Locroja", "Paucarbamba", "San Miguel de Mayocc", "San Pedro de Coris", "Pachamarca", "Cosme"],
+        "Huaytará": ["Huaytará", "Ayavi", "Córdova", "Huayacundo Arma", "Laramarca", "Ocoyo", "Pilpichaca", "Querco", "Quito-Arma", "San Antonio de Cusicancha", "San Francisco de Sangayaico", "San Isidro", "Santiago de Chocorvos", "Santiago de Quirahuara", "Santo Domingo de Capillas", "Tambo"],
+        "Tayacaja": ["Pampas", "Acostambo", "Acraquia", "Ahuaycha", "Colcabamba", "Daniel Hernández", "Huachocolpa", "Huaribamba", "Ñahuimpuquio", "Pazos", "Quishuar", "Salcabamba", "Salcahuasi", "San Marcos de Rocchac", "Surcubamba", "Tintay Puncu", "Roble"]
+      },
+      "Huánuco": {
+        "Huánuco": ["Huánuco", "Amarilis", "Chinchao", "Churubamba", "Margos", "Pillco Marca", "Quispicanchi", "San Francisco de Cayrán", "San Pedro de Chaulán", "Santa María del Valle", "Yarumayo", "José Crespo y Castillo"],
+        "Ambo": ["Ambo", "Cayna", "Colpas", "Conchamarca", "Huacar", "San Rafael", "San Francisco", "Tomay Kichwa"],
+        "Dos de Mayo": ["La Unión", "Chuquis", "Marías", "Pachas", "Quivilla", "Ripan", "Shunqui", "Sillapata", "Yanas"],
+        "Huacaybamba": ["Huacaybamba", "Canchabamba", "Cochabamba", "Pinra"],
+        "Huamalíes": ["Llata", "Arancay", "Chavín de Pariarca", "Jacas Grande", "Jircan", "Miraflores", "Monzón", "Punchao", "Puños", "Singa", "Tantamayo"],
+        "Leoncio Prado": ["Rupa-Rupa", "Daniel Alomía Robles", "Hermilio Valdizán", "José Crespo y Castillo", "Luyando", "Mariano Dámaso Beraún", "Pucayacu"],
+        "Marañón": ["Huacrachuco", "Cholon", "San Buenaventura", "La Morada", "Santa Rosa de Alto Yanajanca"],
+        "Pachitea": ["Panao", "Chaglla", "Molino", "Umari"],
+        "Puerto Inca": ["Puerto Inca", "Codo del Pozuzo", "Honoria", "Tournavista", "Yuyapichis"],
+        "Lauricocha": ["Jesús", "Baños", "Jivia", "Queropalca", "Rondos", "San Francisco de Asís", "San Miguel de Curi"],
+        "Yarowilca": ["Chavinillo", "Cahuac", "Chacabamba", "Aparicio Pomares", "Jacas Chico", "Obas", "Pampamarca", "Choras"]
+      },
+      "Ica": {
+        "Ica": ["Ica", "La Tinguiña", "Los Aquijes", "Ocucaje", "Pachacutec", "Parcona", "Pueblo Nuevo", "Salas", "San José de Los Molinos", "San Juan Bautista", "Santiago", "Subtanjalla", "Tate", "Yauca del Rosario"],
+        "Chincha": ["Chincha Alta", "Alto Larán", "Chavín", "Chincha Baja", "El Carmen", "Grocio Prado", "Pueblo Nuevo", "San Juan de Yanac", "San Pedro de Huacarpana", "Sunampe", "Tambo de Mora"],
+        "Nazca": ["Nazca", "Changuillo", "El Ingenio", "Marcona", "Vista Alegre"],
+        "Palpa": ["Palpa", "Llipata", "Río Grande", "Santa Cruz", "Tibillo"],
+        "Pisco": ["Pisco", "Huancano", "Humay", "Independencia", "Paracas", "San Andrés", "San Clemente", "Tupac Amaru Inca"]
+      },
+      "Junín": {
+        "Huancayo": ["Huancayo", "Carhuacallanga", "Chacapampa", "Chicche", "Chilca", "Chongos Alto", "Chupuro", "Colca", "Cullhuas", "El Tambo", "Huacrapuquio", "Hualhuas", "Huancan", "Huasicancha", "Huayucachi", "Ingenio", "Pariahuanca", "Pilcomayo", "Pucara", "Quichuay", "Quilcas", "San Agustín", "San Jerónimo de Tunán", "San Pedro de Saño", "Santo Domingo de Acobamba", "Sapallanga", "Sicaya", "Viques"],
+        "Concepción": ["Concepción", "Aco", "Andamarca", "Chambara", "Cochas", "Comas", "Heroínas Toledo", "Manzanares", "Mariscal Castilla", "Matahuasi", "Mito", "Nueve de Julio", "Orcotuna", "San José de Quero", "Santa Rosa de Ocopa"],
+        "Chanchamayo": ["Chanchamayo", "Perené", "Pichanaqui", "San Luis de Shuaro", "San Ramón", "Vitoc"],
+        "Jauja": ["Jauja", "Acolla", "Apata", "Ataura", "Canchayllo", "Curicaca", "El Mantaro", "Huamali", "Huaripampa", "Huertas", "Janjaillo", "Julcán", "Leonor Ordóñez", "Llocllapampa", "Marco", "Masma", "Masma Chicche", "Molinos", "Monobamba", "Muqui", "Muquiyauyo", "Paca", "Paccha", "Pancan", "Parco", "Pomacancha", "Ricran", "San Lorenzo", "San Pedro de Chunan", "Sausa", "Sincos", "Tunan Marca", "Yauli", "Yauyos"],
+        "Junín": ["Junín", "Carhuamayo", "Ondores", "Ulcumayo"],
+        "Satipo": ["Satipo", "Coviriali", "Llaylla", "Mazamari", "Pampa Hermosa", "Pangoa", "Río Negro", "Río Tambo", "Vizcatan del Ene"],
+        "Tarma": ["Tarma", "Acobamba", "Huaricolca", "Huasahuasi", "La Unión", "Palca", "Palcamayo", "San Pedro de Cajas", "Tapo"],
+        "Yauli": ["La Oroya", "Chacapalpa", "Huay-Huay", "Marcapomacocha", "Morococha", "Paccha", "Santa Bárbara de Carhuacayan", "Santa Rosa de Sacco", "Suitucancha", "Yauli"],
+        "Chupaca": ["Chupaca", "Ahuac", "Chongos Bajo", "Huachac", "Huamancaca Chico", "San Juan de Yscos", "San Juan de Jarpa", "Tres de Diciembre", "Yanacancha"]
+      },
+      "La Libertad": {
+        "Trujillo": ["Trujillo", "El Porvenir", "Florencia de Mora", "Huanchaco", "La Esperanza", "Laredo", "Moche", "Poroto", "Salaverry", "Simbal", "Víctor Larco Herrera"],
+        "Ascope": ["Ascope", "Chicama", "Chocope", "Magdalena de Cao", "Paiján", "Rázuri", "Santiago de Cao", "Casa Grande"],
+        "Bolívar": ["Bolívar", "Bambamarca", "Condormarca", "Longotea", "Uchumarca", "Ucuncha"],
+        "Chepén": ["Chepén", "Pacanga", "Pueblo Nuevo"],
+        "Julcán": ["Julcán", "Calamarca", "Carabamba", "Huaso"],
+        "Otuzco": ["Otuzco", "Agallpampa", "Charat", "Huaranchal", "La Cuesta", "Mache", "Paranday", "Salpo", "Sinsicap", "Usquil"],
+        "Pacasmayo": ["San Pedro de Lloc", "Guadalupe", "Jequetepeque", "Pacasmayo", "San José"],
+        "Pataz": ["Tayabamba", "Buldibuyo", "Chillia", "Huancaspata", "Huaylillas", "Huayo", "Ongón", "Parcoy", "Pataz", "Pias", "Santiago de Challas", "Taurija", "Urpay"],
+        "Sánchez Carrión": ["Huamachuco", "Chugay", "Cochorco", "Curgos", "Marcabal", "Sanagoran", "Sarin", "Sartimbamba"],
+        "Santiago de Chuco": ["Santiago de Chuco", "Angasmarca", "Cachicadan", "Mollebamba", "Mollepata", "Quiruvilca", "Santa Cruz de Chuca", "Sitabamba"],
+        "Gran Chimú": ["Cascas", "Lucma", "Marmot", "Sayapullo"],
+        "Virú": ["Virú", "Chao", "Guadalupito"]
+      },
+      "Lambayeque": {
+        "Chiclayo": ["Chiclayo", "Chongoyape", "Eten", "Eten Puerto", "José Leonardo Ortiz", "La Victoria", "Lagunas", "Monsefú", "Nueva Arica", "Oyotún", "Pátapo", "Picsi", "Pimentel", "Reque", "Santa Rosa", "Saña", "Cayaltí", "Pomalca", "Tumán", "Ucúpe"],
+        "Ferreñafe": ["Ferreñafe", "Cañaris", "Incahuasi", "Manuel Antonio Mesones Muro", "Pitipo", "Pueblo Nuevo"],
+        "Lambayeque": ["Lambayeque", "Chochope", "Illimo", "Jayanca", "Mochumí", "Morrope", "Motupe", "Olmos", "Pacora", "Salas", "San José", "Túcume"]
+      },
+      "Lima": {
+        "Lima": ["Lima", "Ancón", "Ate", "Barranco", "Breña", "Carabayllo", "Chaclacayo", "Chorrillos", "Cieneguilla", "Comas", "El Agustino", "Independencia", "Jesús María", "La Molina", "La Victoria", "Lince", "Los Olivos", "Lurigancho", "Lurin", "Magdalena del Mar", "Miraflores", "Pachacámac", "Pucusana", "Pueblo Libre", "Puente Piedra", "Punta Hermosa", "Punta Negra", "Rímac", "San Bartolo", "San Borja", "San Isidro", "San Juan de Lurigancho", "San Juan de Miraflores", "San Luis", "San Martín de Porres", "San Miguel", "Santa Anita", "Santa María del Mar", "Santa Rosa", "Santiago de Surco", "Surquillo", "Villa El Salvador", "Villa María del Triunfo"],
+        "Barranca": ["Barranca", "Paramonga", "Pativilca", "Supe", "Supe Puerto"],
+        "Cajatambo": ["Cajatambo", "Copa", "Gorgor", "Huancapón", "Manás"],
+        "Canta": ["Canta", "Arahuay", "Huamantanga", "Huaros", "Lachaqui", "San Buenaventura", "Santa Rosa de Quives"],
+        "Cañete": ["San Vicente de Cañete", "Asia", "Calango", "Cerro Azul", "Chilca", "Coayllo", "Imperial", "Lunahuaná", "Mala", "Nuevo Imperial", "Pacarán", "Quilmaná", "San Antonio", "San Luis", "Santa Cruz de Flores", "Zúñiga"],
+        "Huaral": ["Huaral", "Atavillos Alto", "Atavillos Bajo", "Aucallama", "Chancay", "Ihuarí", "Lampían", "Pacaraos", "San Miguel de Acos", "Santa Cruz de Andamarca", "Sumbilca", "Veintisiete de Noviembre"],
+        "Huarochirí": ["Matucana", "Antioquía", "Callahuanca", "Carampoma", "Chicla", "Cuenca", "Huachupampa", "Huanza", "Huarochirí", "Lahuaytambo", "Langa", "Laraos", "Mariatana", "Ricardo Palma", "San Andrés de Tupicocha", "San Antonio de Chaclla", "San Bartolomé", "San Damián", "San Juan de Iris", "San Juan de Tantaranche", "San Lorenzo de Quinti", "San Mateo", "San Mateo de Otao", "San Pedro de Casta", "San Pedro de Huancayre", "Sangallaya", "Santa Cruz de Cocachacra", "Santa Eulalia", "Santiago de Anchucaya", "Santiago de Tuna", "Santo Domingo de Los Olleros", "Surco"],
+        "Huaura": ["Huacho", "Ambar", "Caleta de Carquín", "Checras", "Hualmay", "Huaura", "Leoncio Prado", "Paccho", "Santa Leonor", "Santa María", "Sayán", "Végueta"],
+        "Oyón": ["Oyón", "Andajes", "Caujul", "Cochamarca", "Naván", "Pachangara"],
+        "Yauyos": ["Yauyos", "Alis", "Allauca", "Ayaviri", "Azángaro", "Cacra", "Carania", "Catahuasi", "Chocos", "Cochas", "Colonia", "Hongos", "Huampara", "Huancaya", "Huangascar", "Huantan", "Huañec", "Laraos", "Lincha", "Madean", "Miraflores", "Omas", "Putinza", "Quinches", "Quinocay", "San Joaquín", "San Pedro de Pilas", "Tanta", "Tauripampa", "Tomas", "Tupe", "Viñac", "Vitis"]
+      },
+      "Loreto": {
+        "Maynas": ["Iquitos", "Alto Nanay", "Fernando Lores", "Indiana", "Las Amazonas", "Mazan", "Napo", "Punchana", "Torres Causana", "Belén", "San Juan Bautista"],
+        "Alto Amazonas": ["Yurimaguas", "Balsapuerto", "Jeberos", "Lagunas", "Santa Cruz", "Teniente César López Rojas"],
+        "Loreto": ["Nauta", "Parinari", "Tigre", "Trompeteros", "Urarinas"],
+        "Mariscal Ramón Castilla": ["Ramón Castilla", "Pebas", "Yavari", "San Pablo"],
+        "Requena": ["Requena", "Alto Tapiche", "Capelo", "Emilio San Martín", "Maquia", "Puinahua", "Saquena", "Soplin", "Tapiche", "Jenaro Herrera", "Yaquerana"],
+        "Ucayali": ["Contamana", "Inahuaya", "Padre Márquez", "Pampa Hermosa", "Sarayacu", "Vargas Guerra"],
+        "Datem del Marañón": ["Barranca", "Cahuapanas", "Manseriche", "Morona", "Pastaza", "Andoas"],
+        "Putumayo": ["Putumayo", "Rosa Panduro", "Teniente Manuel Clavero", "Yaguas"]
+      },
+      "Madre de Dios": {
+        "Tambopata": ["Tambopata", "Inambari", "Las Piedras", "Laberinto"],
+        "Manu": ["Manu", "Fitzcarrald", "Madre de Dios", "Huepetuhe"],
+        "Tahuamanu": ["Iñapari", "Iberia", "Tahuamanu"]
+      },
+      "Moquegua": {
+        "Mariscal Nieto": ["Moquegua", "Carumas", "Cuchumbaya", "Samegua", "San Cristóbal", "Torata"],
+        "General Sánchez Cerro": ["Omate", "Chojata", "Coalaque", "Ichuña", "La Capilla", "Lloque", "Matalaque", "Puquina", "Quinistaquillas", "Ubinas", "Yunga"],
+        "Ilo": ["Ilo", "El Algarrobal", "Pacocha"]
+      },
+      "Pasco": {
+        "Pasco": ["Chaupimarca", "Huariaca", "Huayllay", "Ninacaca", "Pallanchacra", "Paucartambo", "San Francisco de Asís de Yarusyacán", "Simón Bolívar", "Ticlacayán", "Tinyahuarco", "Vicco", "Yanacancha"],
+        "Daniel Alcides Carrión": ["Yanahuanca", "Chacayan", "Goyllarisquizga", "Paucar", "San Pedro de Pillao", "Santa Ana de Tusi", "Tapuc", "Vilcabamba"],
+        "Oxapampa": ["Oxapampa", "Chontabamba", "Huancabamba", "Palcazu", "Pozuzo", "Puerto Bermúdez", "Villa Rica", "Constitución"]
+      },
+      "Piura": {
+        "Piura": ["Piura", "Castilla", "Catacaos", "Cura Mori", "El Tallán", "La Arena", "La Unión", "Las Lomas", "Tambo Grande", "Veintiséis de Octubre"],
+        "Ayabaca": ["Ayabaca", "Frias", "Jilili", "Lagunas", "Montero", "Pacaipampa", "Paimas", "Sapillica", "Sicchez", "Suyo"],
+        "Huancabamba": ["Huancabamba", "Canchaque", "El Carmen de la Frontera", "Huarmaca", "Lalaquiz", "San Miguel de El Faique", "Sondor", "Sondorillo"],
+        "Morropón": ["Chulucanas", "Buenos Aires", "Chalaco", "La Matanza", "Morropón", "Salitral", "San Juan de Bigote", "Santa Catalina de Mossa", "Santo Domingo", "Yamango"],
+        "Paita": ["Paita", "Amotape", "Arenal", "Colán", "La Huaca", "Tamarindo", "Vichayal"],
+        "Sullana": ["Sullana", "Bellavista", "Ignacio Escudero", "Lancones", "Marcavelica", "Miguel Checa", "Querecotillo", "Salitral"],
+        "Talara": ["Pariñas", "El Alto", "La Brea", "Lobitos", "Los Órganos", "Máncora"],
+        "Sechura": ["Sechura", "Bellavista de la Unión", "Bernal", "Cristo Nos Valga", "Vice", "Rinconada Llicuar"]
+      },
+      "Puno": {
+        "Puno": ["Puno", "Acora", "Amantani", "Atuncolla", "Capachica", "Chucuito", "Coata", "Huata", "Mañazo", "Paucarcolla", "Pichacani", "Platería", "San Antonio", "Tiquillaca", "Vilque"],
+        "Azángaro": ["Azángaro", "Achaya", "Arapa", "Asillo", "Caminaca", "Chupa", "José Domingo Choquehuanca", "Muñani", "Potoni", "Saman", "San Antón", "San José", "San Juan de Salinas", "Santiago de Pupuja", "Tirapata"],
+        "Carabaya": ["Macusani", "Ajoyani", "Ayapata", "Coasa", "Corani", "Crucero", "Ituata", "Ollachea", "San Gabán", "Usicayos"],
+        "Chucuito": ["Juli", "Desaguadero", "Huacullani", "Kelluyo", "Pisacoma", "Pomata", "Zepita"],
+        "El Collao": ["Ilave", "Capazo", "Pilcuyo", "Santa Rosa", "Conduriri"],
+        "Huancané": ["Huancané", "Cojata", "Huatasani", "Inchupalla", "Pusi", "Rosaspata", "Taraco", "Vilque Chico"],
+        "Lampa": ["Lampa", "Cabanilla", "Calapuja", "Nicasio", "Ocuviri", "Palca", "Paratía", "Pucará", "Santa Lucía", "Vilavila"],
+        "Melgar": ["Ayaviri", "Antauta", "Cupi", "Llalli", "Macari", "Nuñoa", "Orurillo", "Santa Rosa", "Umachiri"],
+        "Moho": ["Moho", "Conima", "Huayrapata", "Tilali"],
+        "San Antonio de Putina": ["Putina", "Ananea", "Pedro Vilca Apaza", "Quilcapuncu", "Sina"],
+        "San Román": ["Juliaca", "Cabana", "Cabanillas", "Caracoto"],
+        "Sandia": ["Sandia", "Alto Inambari", "Cuyocuyo", "Limbani", "Patambuco", "Phara", "Quiaca", "San Juan del Oro", "Yanahuaya", "San Pedro de Putina Punco"],
+        "Yunguyo": ["Yunguyo", "Anapia", "Copani", "Cuturapi", "Ollaraya", "Tinicachi", "Unicachi"]
+      },
+      "San Martín": {
+        "Moyobamba": ["Moyobamba", "Calzada", "Habana", "Jepelacio", "Soritor", "Yantalo"],
+        "Bellavista": ["Bellavista", "Alto Biavo", "Bajo Biavo", "Huallaga", "San Pablo", "San Rafael"],
+        "El Dorado": ["San José de Sisa", "Agua Blanca", "San Martín", "Santa Rosa", "Shatoja"],
+        "Huallaga": ["Saposoa", "Alto Saposoa", "El Eslabón", "Piscoyacu", "Sacanche", "Tingo de Saposoa"],
+        "Lamas": ["Lamas", "Alonso de Alvarado", "Barranquita", "Caynarachi", "Cuñumbuqui", "Pinto Recodo", "Rumisapa", "San Roque de Cumbaza", "Shanao", "Tabalosos", "Zapatero"],
+        "Mariscal Cáceres": ["Juanjuí", "Campanilla", "Huicungo", "Pachiza", "Pajarillo"],
+        "Picota": ["Picota", "Buenos Aires", "Caspisapa", "Pilluana", "Pucacaca", "San Cristóbal", "San Hilarión", "Shamboyacu", "Tingo de Ponasa", "Tres Unidos"],
+        "Rioja": ["Rioja", "Awajún", "Elías Soplin Vargas", "Nueva Cajamarca", "Pardo Miguel", "Posic", "San Fernando", "Yorongos", "Yuracyacu"],
+        "San Martín": ["Tarapoto", "Alberto Leveau", "Cacatachi", "Chazuta", "Chipurana", "El Porvenir", "Huimbayoc", "Juan Guerra", "La Banda de Shilcayo", "Morales", "Papaplaya", "San Antonio", "Sauce", "Shapaja"],
+        "Tocache": ["Tocache", "Nuevo Progreso", "Polvora", "Shunte", "Uchiza"]
+      },
+      "Tacna": {
+        "Tacna": ["Tacna", "Alto de la Alianza", "Calana", "Ciudad Nueva", "Inclán", "Pachía", "Palca", "Pocollay", "Sama", "Coronel Gregorio Albarracín Lanchipa"],
+        "Candarave": ["Candarave", "Cairani", "Camilaca", "Curibaya", "Huanuara", "Quilahuani"],
+        "Jorge Basadre": ["Locumba", "Ilabaya", "Ite"],
+        "Tarata": ["Tarata", "Chucatamani", "Estique", "Estique-Pampa", "Sitajara", "Susapaya", "Tarucachi", "Ticaco"]
+      },
+      "Tumbes": {
+        "Tumbes": ["Tumbes", "Corrales", "La Cruz", "Pampas de Hospital", "San Jacinto", "San Juan de la Virgen"],
+        "Contralmirante Villar": ["Zorritos", "Casitas", "Canoas de Punta Sal"],
+        "Zarumilla": ["Zarumilla", "Aguas Verdes", "Matapalo", "Papayal"]
+      },
+      "Ucayali": {
+        "Coronel Portillo": ["Callería", "Campoverde", "Iparía", "Masisea", "Yarinacocha", "Nueva Requena", "Manantay"],
+        "Atalaya": ["Raymondi", "Sepahua", "Tahuania", "Yurua"],
+        "Padre Abad": ["Padre Abad", "Irazola", "Curimaná", "Neshuya", "Alexander Von Humboldt"],
+        "Purús": ["Purús"]
+      }
+    };
+    
+    // Gestión de pasos
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    const btnVolverStep1 = document.getElementById('btn-volver-step1');
+    const btnVolverStep2 = document.getElementById('btn-volver-step2');
+    
+    document.getElementById('btn-step1').addEventListener('click', function() {
+      const emailInput = document.getElementById('email');
+      if(emailInput.value.trim() !== '') {
+        step1.classList.remove('active');
+        step2.classList.add('active');
+        btnVolverStep1.style.display = 'block';
+      } else {
+        alert('Por favor, ingresa tu correo electrónico.');
+      }
+    });
+    
+    document.getElementById('btn-confirmar-direccion').addEventListener('click', function() {
+      const form = document.getElementById('direccion-form');
+      if(form.checkValidity()) {
+        step2.classList.remove('active');
+        step3.classList.add('active');
+        btnVolverStep2.style.display = 'block';
+      } else {
+        alert('Por favor, completa todos los campos de la dirección.');
+      }
+    });
+    
+    document.getElementById('btn-descartar').addEventListener('click', function() {
+      document.getElementById('direccion-form').reset();
+      // Reiniciamos selects de provincia y distrito
+      document.getElementById('provincia').innerHTML = '<option value="">Seleccione una provincia</option>';
+      document.getElementById('distrito').innerHTML = '<option value="">Seleccione un distrito</option>';
+    });
+    
+    // Botones para volver a pasos anteriores
+    btnVolverStep1.addEventListener('click', function() {
+      step2.classList.remove('active');
+      step1.classList.add('active');
+      btnVolverStep1.style.display = 'none';
+      btnVolverStep2.style.display = 'none';
+    });
+    
+    btnVolverStep2.addEventListener('click', function() {
+      step3.classList.remove('active');
+      step2.classList.add('active');
+      btnVolverStep2.style.display = 'none';
+    });
+    
+    // Seleccionar todas las opciones de pago
+    const paymentOptions = document.querySelectorAll('.payment-option');
+    
+    // Manejar la selección de una opción de pago
+    paymentOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        // Remover la clase 'selected' de todas las opciones
+        paymentOptions.forEach(opt => opt.classList.remove('selected'));
+        // Añadir la clase 'selected' a la opción clicada
+        this.classList.add('selected');
+        
+        // Ocultar todos los formularios e información adicional
+        document.querySelectorAll('.payment-option form, .payment-option div[id$="-info"]').forEach(el => el.style.display = 'none');
+        
+        // Mostrar el formulario o información correspondiente
+        const selectedId = this.id;
+        if (selectedId === 'option-credito') {
+          document.getElementById('form-credito').style.display = 'block';
+        } else if (selectedId === 'option-paypal') {
+          document.getElementById('paypal-info').style.display = 'block';
+        } else if (selectedId === 'option-yape') {
+          document.getElementById('yape-info').style.display = 'block';
+        } else if (selectedId === 'option-otros') {
+          document.getElementById('otros-info').style.display = 'block';
+        }
+      });
+    });
+    
+    // Simulación de pago con Tarjeta
+    document.getElementById('btn-pagar-credito').addEventListener('click', function() {
+      const form = document.getElementById('form-credito');
+      if (form.checkValidity()) {
+        alert('Pago con Tarjeta procesado.');
+      } else {
+        alert('Por favor, completa todos los campos correctamente.');
+      }
+    });
+    
+    // Simulación de pago con PayPal
+    document.getElementById('btn-pagar-paypal').addEventListener('click', function() {
+      alert('Redirigiendo a PayPal...');
+    });
+    
+    /* ==========================================
+       CARGA DINÁMICA DE PROVINCIAS Y DISTRITOS
+       ========================================== */
+    
+    const departamentoSelect = document.getElementById('departamento');
+    const provinciaSelect   = document.getElementById('provincia');
+    const distritoSelect    = document.getElementById('distrito');
+    
+    // Cargar departamentos al inicio
+    Object.keys(locationData).forEach(function(dept) {
+      const option = document.createElement('option');
+      option.value = dept;
+      option.textContent = dept;
+      departamentoSelect.appendChild(option);
+    });
+    
+    // Cuando cambie el departamento, se cargan las provincias correspondientes
+    departamentoSelect.addEventListener('change', function() {
+      const dept = this.value;
+      provinciaSelect.innerHTML = '<option value="">Seleccione una provincia</option>';
+      distritoSelect.innerHTML = '<option value="">Seleccione un distrito</option>';
+      if(locationData[dept]) {
+        Object.keys(locationData[dept]).forEach(function(prov) {
+          const option = document.createElement('option');
+          option.value = prov;
+          option.textContent = prov;
+          provinciaSelect.appendChild(option);
+        });
+      }
+    }); 
+    
+    // Cuando cambie la provincia, se cargan los distritos correspondientes
+    provinciaSelect.addEventListener('change', function() {
+      const dept = departamentoSelect.value;
+      const prov = this.value;
+      distritoSelect.innerHTML = '<option value="">Seleccione un distrito</option>';
+      if(locationData[dept] && locationData[dept][prov]) {
+        locationData[dept][prov].forEach(function(dist) {
+          const option = document.createElement('option');
+          option.value = dist;
+          option.textContent = dist;
+          distritoSelect.appendChild(option);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

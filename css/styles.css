@@ -1,0 +1,434 @@
+/* =========================================
+   RESET Y VARIABLES GLOBALES
+   ========================================= */
+   :root {
+    --primary-color: #006837;       /* Verde principal */
+    --secondary-color: #333333;     /* Gris oscuro */
+    --text-color: #666666;          /* Gris texto */
+    --light-gray: #f5f5f5;
+    --white: #ffffff;
+    --border-color: #e0e0e0;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* =========================================
+     ESTILOS BASE
+     ========================================= */
+  body {
+    font-family: "Arial", sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  
+  /* =========================================
+     TOP BAR
+     ========================================= */
+  .top-bar {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    padding: 8px 0;
+    font-size: 14px;
+  }
+  
+  .top-bar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .contact-info span {
+    margin-right: 20px;
+  }
+  
+  .contact-info i {
+    margin-right: 5px;
+    color: var(--primary-color);
+  }
+  
+  .social-links a {
+    color: var(--white);
+    margin-left: 15px;
+    transition: color 0.3s ease;
+  }
+  
+  .social-links a:hover {
+    color: var(--primary-color);
+  }
+  
+  /* =========================================
+     NAVBAR
+     ========================================= */
+  .navbar {
+    background: var(--white);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+  }
+  
+  .logo img {
+    height: 60px;
+  }
+  
+  /* Botón para menú (versión móvil) */
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--secondary-color);
+  }
+  
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+  }
+  
+  .nav-links li {
+    position: relative;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: var(--secondary-color);
+    font-weight: 600;
+    font-size: 14px;
+    transition: color 0.3s ease;
+    padding: 10px 0;
+    position: relative;
+  }
+  
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+  }
+  
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+  
+  /* Marca la pestaña activa en verde */
+  .nav-links a.active {
+    color: var(--primary-color);
+    font-weight: bold;
+  }
+  
+  /* =========================================
+     SLIDER / HERO
+     ========================================= */
+  .slider-container {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .slider {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+  
+  .slide {
+    position: relative;
+    min-width: 100%;
+    height: 500px; /* Ajusta según tus imágenes */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ccc; /* Fondo por defecto si no hay imagen */
+  }
+  
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .slide-content {
+    position: absolute;
+    text-align: center;
+    color: #fff;
+    padding: 20px;
+    max-width: 600px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+  }
+  
+  .slide-content h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  
+  .slide-content p {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+  }
+  
+  /* Botones de navegación del slider */
+  .slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+    z-index: 10;
+  }
+  
+  .slider-btn:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .prev {
+    left: 15px;
+  }
+  
+  .next {
+    right: 15px;
+  }
+  
+  /* =========================================
+     BOTONES GENERALES
+     ========================================= */
+  .btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    background: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background: #004f2c; /* Un verde más oscuro */
+  }
+  
+  .btn-secondary {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 20px;
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-secondary:hover {
+    background: var(--primary-color);
+    color: var(--white);
+  }
+  
+  /* =========================================
+     SECCIÓN DE SERVICIOS
+     ========================================= */
+  .servicios-destacados {
+    padding: 80px 0;
+    background: var(--light-gray);
+  }
+  
+  .servicios-destacados h2 {
+    text-align: center;
+    color: var(--secondary-color);
+    margin-bottom: 50px;
+    font-size: 2.5em;
+  }
+  
+  .servicios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 20px;
+  }
+  
+  .servicio-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .servicio-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .icon-circle {
+    width: 80px;
+    height: 80px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+  
+  .icon-circle i {
+    font-size: 30px;
+    color: var(--white);
+  }
+  
+  .servicio-card h3 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+  }
+  
+  /* =========================================
+     FOOTER
+     ========================================= */
+  footer {
+    background: var(--secondary-color);
+    color: var(--white);
+    padding: 60px 0 30px;
+  }
+  
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  
+  .footer-section h4 {
+    color: var(--white);
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+  
+  .footer-section p {
+    margin-bottom: 10px;
+  }
+  
+  .footer-section i {
+    color: var(--primary-color);
+    margin-right: 8px;
+  }
+  
+  .footer-section a {
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-section a:hover {
+    color: var(--primary-color);
+  }
+  
+  .redes-sociales a {
+    margin-right: 10px;
+    font-size: 1.2rem;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* =========================================
+     MEDIA QUERIES
+     ========================================= */
+  
+  /* Tablets y pantallas medianas */
+  @media (max-width: 768px) {
+    .navbar .container {
+      flex-direction: column;
+    }
+  
+    .menu-toggle {
+      display: block; /* Mostrar el icono de menú en pantallas pequeñas */
+    }
+  
+    .nav-links {
+      display: none;  /* Por defecto, ocultamos el menú */
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+      width: 100%;
+    }
+  
+    .nav-links.show {
+      display: flex; /* Clase que se togglea con JS para mostrar el menú */
+    }
+  
+    .servicios-destacados {
+      padding: 40px 0;
+    }
+  }
+  
+  /* Móviles y pantallas muy pequeñas */
+  @media (max-width: 480px) {
+    .slide-content h1 {
+      font-size: 1.5em;
+    }
+    .slide-content p {
+      font-size: 1em;
+    }
+    .footer-content {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* =========================================
+     ESTILOS PARA PÁGINAS INDIVIDUALES (opcionales)
+     ========================================= */
+  .page-header {
+    background: var(--light-gray);
+    padding: 40px 0;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .page-header h1 {
+    color: var(--secondary-color);
+    font-size: 2.5em;
+    margin: 0;
+  }
+  
+  .error-mensaje {
+    text-align: center;
+    padding: 50px 20px;
+    margin: 20px;
+    background: var(--light-gray);
+    border-radius: 8px;
+    color: #dc3545;
+  }
+  
+  .error-mensaje h2 {
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+  }
+  

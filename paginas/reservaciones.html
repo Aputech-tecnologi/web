@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contacto - APUTECH</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #0077cc;
+      --secondary: #e6f2ff;
+      --dark: #333;
+      --light: #fff;
+      --accent: #28a745;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--secondary);
+      color: var(--dark);
+    }
+
+    header {
+      background: url("https://img.freepik.com/vector-premium/fondo-degradado-color-abstracto-azul-rojo-amarillo-web-presentaciones-e-impresiones_7280-4155.jpg") no-repeat center;
+      background-size: cover;
+      padding: 4rem 2rem;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      text-shadow: 1px 1px 4px black;
+    }
+
+    main {
+      padding: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+
+    .form-container {
+      flex: 1 1 350px;
+      background: var(--light);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .form-container h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: vertical;
+    }
+
+    .btn-reservar {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    .btn-reservar:hover {
+      background-color: #005fa3;
+    }
+
+    .service-info {
+      max-width: 1000px;
+      margin: auto;
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .service-info h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .service-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .service-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 1rem;
+      text-align: left;
+    }
+
+    .card-content h3 {
+      margin-top: 0;
+      color: var(--primary);
+    }
+
+    /* Botón flotante de WhatsApp */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25D366;
+      color: white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      font-size: 28px;
+      z-index: 100;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: background 0.3s;
+    }
+
+    .whatsapp-float:hover {
+      background-color: #1ebd5c;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Contáctanos y agenda tu servicio</h1>
+  </header>
+
+  <main>
+    <div class="form-container">
+      <h2>Reservar una cita</h2>
+      <form id="form-reserva">
+        <div class="form-group">
+          <label for="nombre">Nombre completo:</label>
+          <input type="text" id="nombre" name="nombre" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Correo electrónico:</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono:</label>
+          <input type="tel" id="telefono" name="telefono" required />
+        </div>
+
+        <div class="form-group">
+          <label for="servicio">Tipo de servicio:</label>
+          <select id="servicio" name="servicio" required>
+            <option value="">Selecciona un servicio</option>
+            <option value="Mantenimiento">Mantenimiento</option>
+            <option value="Reparación">Reparación</option>
+            <option value="Consultoría">Consultoría</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="fecha">Fecha deseada:</label>
+          <input type="date" id="fecha" name="fecha" required />
+        </div>
+
+        <div class="form-group">
+          <label for="hora">Hora:</label>
+          <select id="hora" name="hora" required>
+            <option value="">Selecciona una hora</option>
+              <option value="08:30">08:30 AM</option>
+              <option value="09:00">09:00 AM</option>
+              <option value="09:30">09:30 AM</option>
+              <option value="10:00">10:00 AM</option>
+              <option value="10:30">10:30 AM</option>
+              <option value="11:00">11:00 AM</option>
+              <option value="11:30">11:30 AM</option>
+              <option value="12:00">12:00 PM</option>
+              <option value="12:30">12:30 PM</option>
+              <option value="15:00">03:00 PM</option>
+              <option value="15:30">03:30 PM</option>
+              <option value="16:00">04:00 PM</option>
+              <option value="16:30">04:30 PM</option>
+              <option value="17:00">05:00 PM</option>
+              <option value="17:30">05:30 PM</option>
+              <option value="18:00">06:00 PM</option>
+              <option value="18:30">06:30 PM</option>
+              <option value="19:00">07:00 PM</option>
+              <option value="19:30">07:30 PM</option>
+              <option value="20:00">08:00 PM</option>
+              <option value="20:30">08:30 PM</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="comentarios">Comentarios adicionales:</label>
+          <textarea id="comentarios" name="comentarios" placeholder="Opcional"></textarea>
+        </div>
+
+        <button type="submit" class="btn-reservar">
+          <i class="fa fa-calendar-check"></i> Reservar ahora
+        </button>
+      </form>
+    </div>
+
+    <!-- Información adicional sobre servicios -->
+    <section class="service-info" aria-label="Información de servicios">
+      <h2>Nuestros Servicios</h2>
+      <div class="services-grid">
+        <article class="service-card">
+          <img src="https://sitecnologia.com.mx/wp-content/uploads/mantenimiento-laptops-y-pc.jpg" alt="Servicio de mantenimiento" />
+          <div class="card-content">
+            <h3>Mantenimiento</h3>
+            <p>Revisamos y mantenemos tus equipos para que funcionen siempre al máximo rendimiento.</p>
+          </div>
+        </article>
+        <article class="service-card">
+          <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=600&q=80" alt="Servicio de reparación" />
+          <div class="card-content">
+            <h3>Reparación</h3>
+            <p>Reparamos cualquier desperfecto con rapidez y calidad para que vuelvas a estar en marcha.</p>
+          </div>
+        </article>
+        <article class="service-card">
+          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80" alt="Consultoría" />
+          <div class="card-content">
+            <h3>Consultoría</h3>
+            <p>Te asesoramos para tomar las mejores decisiones y optimizar tus procesos.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const fechaInput = document.getElementById("fecha");
+    const hoy = new Date().toISOString().split("T")[0];
+    fechaInput.min = hoy;
+
+    document.getElementById("form-reserva").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const nombre = this.nombre.value.trim();
+      const email = this.email.value.trim();
+      const telefono = this.telefono.value.trim();
+      const servicio = this.servicio.value;
+      const fecha = this.fecha.value;
+      const hora = this.hora.value;
+      const comentarios = this.comentarios.value.trim();
+
+      if (!nombre || nombre.length < 3) {
+        alert("Por favor, ingresa un nombre válido (mínimo 3 caracteres).");
+        this.nombre.focus();
+        return;
+      }
+
+      if (!email || !/\S+@\S+\.\S+/.test(email)) {
+        alert("Por favor, ingresa un correo electrónico válido.");
+        this.email.focus();
+        return;
+      }
+
+      if (!telefono || !/^[0-9\s\-+()]{7,15}$/.test(telefono)) {
+        alert("Por favor, ingresa un teléfono válido.");
+        this.telefono.focus();
+        return;
+      }
+
+      if (!servicio || !fecha || !hora) {
+        alert("Por favor, completa todos los campos requeridos.");
+        return;
+      }
+
+      // Formatear mensaje para WhatsApp
+      const mensaje = `Hola, soy ${nombre}. Solicito una reserva de servicio con la siguiente información:
+- Servicio: ${servicio}
+- Fecha: ${fecha}
+- Hora: ${hora}
+- Email: ${email}
+- Teléfono: ${telefono}${comentarios ? `\n- Comentarios: ${comentarios}` : ''}`;
+
+      // Codificar mensaje para URL
+      const mensajeCodificado = encodeURIComponent(mensaje);
+      
+      // Número de WhatsApp (ajusta este número al que necesites)
+      const numeroWhatsApp = "51983624067";
+      
+      // Crear enlace de WhatsApp con el mensaje
+      const enlaceWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`;
+      
+      // Abrir ventana de WhatsApp
+      window.open(enlaceWhatsApp, '_blank');
+      
+      // Limpiar formulario
+      this.reset();
+      fechaInput.min = hoy;
+    });
+  </script>
+</body>
+</html>

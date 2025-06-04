@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>APUTECH - Nuestros Servicios</title>
+  <style>
+    :root {
+      --color-principal: #0a9396;
+      --color-secundario: #005f73;
+      --color-fondo: #f8f9fa;
+      --color-texto: #333;
+      --color-claro: #e9ecef;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--color-fondo);
+      color: var(--color-texto);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--color-secundario), var(--color-principal));
+      color: #fff;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 20px;
+    }
+
+    .card-content h3 {
+      color: var(--color-principal);
+      margin-bottom: 10px;
+    }
+
+    footer {
+      background-color: var(--color-secundario);
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
+
+    /* Botón de WhatsApp */
+    .whatsapp-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25d366;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      font-size: 28px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .whatsapp-btn:hover {
+      background-color: #1ebe5b;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Servicios Profesionales en Tecnología</h1>
+    <p>Soluciones confiables para computadoras, impresoras y más</p>
+  </header>
+
+  <div class="container">
+    <div class="grid" id="servicios-grid">
+      <!-- Las tarjetas se cargarán aquí dinámicamente -->
+    </div>
+  </div>
+
+  <script>
+    const servicios = [
+      {
+        titulo: "Mantenimiento de Computadoras",
+        descripcion: "Limpieza interna, cambio de pasta térmica, optimización de velocidad, formateo e instalación de software.",
+        imagen: "https://img.freepik.com/foto-gratis/vista-superior-tecnico-hispano-arreglando-ventilador-computadora-joven-conectando-nuevo-componente-cpu_662251-47.jpg?t=st=1747451595~exp=1747455195~hmac=06f4c5fccf7930c9bf3b8aba6c917f9f6988545f53f851d2753a12f0954facf6&w=2000"
+      },
+      {
+        titulo: "Reparación de Impresoras",
+        descripcion: "Reparamos impresoras de inyección y láser. Cambio de repuestos, limpieza de cabezales y más.",
+        imagen: "https://www.serviciotecnicoecuador.ec/wp-content/uploads/2023/04/reparacion-de-impresoras-quito-5.png"
+      },
+      {
+        titulo: "Venta de Componentes",
+        descripcion: "Memorias RAM, SSD, fuentes, procesadores, placas madre, tarjetas gráficas y más.",
+        imagen: "https://884e910d64.clvaw-cdnwnd.com/c9bf1596b060169a98f1c40490d409e7/200000175-ba172ba174/Armado-De-PC-Gamer.png?ph=884e910d64"
+      },
+      {
+        titulo: "Venta de Equipos y Accesorios",
+        descripcion: "Laptops, PCs, monitores, teclados, mouses, routers y accesorios tecnológicos.",
+        imagen: "https://img.pccomponentes.com/pcblog/1669071600000/head-componentes-1-2.jpg"
+      },
+      {
+        titulo: "Redes y Conectividad",
+        descripcion: "Instalación de redes para hogares y empresas. Configuración de routers y cableado estructurado.",
+        imagen: "https://img.redestelecom.es/wp-content/uploads/2024/01/04124834/5G.jpg"
+      },
+      {
+        titulo: "Soporte Técnico Especializado",
+        descripcion: "Atención personalizada, asistencia remota o presencial, diagnósticos rápidos y eficaces.",
+        imagen: "https://i.ytimg.com/vi/4N6lMcPep1Y/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAcwz5gfYLbUjwWRJJAriTN11vtDw"
+      }
+    ];
+
+    const grid = document.getElementById('servicios-grid');
+
+    servicios.forEach(servicio => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${servicio.imagen}" alt="${servicio.titulo}">
+        <div class="card-content">
+          <h3>${servicio.titulo}</h3>
+          <p>${servicio.descripcion}</p>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  </script>
+
+</body>
+</html>

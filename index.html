@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>APUTECH</title>
+  <link rel="icon" href="Aputech_logo.jpg" type="image/png">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  
+  <!-- Internal CSS -->
+  <style>
+    /* Base Styles */
+    :root {
+      --primary-color: #ad1313;
+      --secondary-color: #6c757d;
+      --dark-color: #343a40;
+      --light-color: #f8f9fa;
+      --success-color: #28a745;
+      --danger-color: #dc3545;
+      --warning-color: #ffc107;
+      --info-color: #17a2b8;
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  --primary-gradient: linear-gradient(135deg, #00c853, #2962ff, #aa00ff);
+  background: var(--primary-gradient);
+  color: #333;
+}
+
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+    
+    /* Header Styles */
+    .top-bar {
+      background-color: #3540665e;
+      color: white;
+      padding: 4px 0;
+    }
+    
+    .top-bar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .contact-info span {
+      margin-right: 20px;
+      font-size: 17px;
+    }
+    
+    .social-links a {
+      color: white;
+      margin-left: 15px;
+      font-size: 24px;
+      transition: var(--transition);
+    }
+    
+    .social-links a:hover {
+      color: #000000;
+    }
+    
+    /* Navbar Styles */
+    .navbar {
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .navbar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo img {
+      max-height: 60px;
+    }
+    
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-links li {
+      margin-left: 20px;
+    }
+    
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark-color);
+      font-weight: 600;
+      font-size: 14px;
+      transition: var(--transition);
+      position: relative;
+      padding: 5px 0;
+      cursor: pointer; /* Añadido para mostrar que es clickeable */
+    }
+    
+    .nav-links a:hover {
+      color: var(--primary-color);
+    }
+    
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary-color);
+      bottom: 0;
+      left: 0;
+      transition: var(--transition);
+    }
+    
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--dark-color);
+    }
+    
+    /* Slider Styles */
+    .slider-container {
+      position: relative;
+      overflow: hidden;
+      height: 600px;
+    }
+    
+    .slider {
+      display: flex;
+      height: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+    
+    .slide {
+      flex: 0 0 100%;
+      position: relative;
+      display: none;
+    }
+    
+    .slide.active {
+      display: block;
+    }
+    
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .slide-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+    
+    .slide-content h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+    
+    .slide-content p {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+    }
+    
+    .btn-primary {
+      display: inline-block;
+      background-color: #ff0000;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    
+    .btn-primary:hover {
+      background-color: #0056b3;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      z-index: 10;
+      transition: var(--transition);
+    }
+    
+    .slider-btn:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    
+    .prev {
+      left: 20px;
+    }
+    
+    .next {
+      right: 20px;
+    }
+    
+.services {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, #6a7dc0, #fff16c); 
+}
+
+    
+.services h2 {
+  display: block;           /* Asegura que sea un bloque */
+  margin: 0 auto 3rem auto; /* Centra horizontalmente con espacio abajo */
+  text-align: center;       /* Centra el texto dentro del h2 */
+  font-size: 2.5rem;
+  color: #000000;
+  position: relative;
+}
+
+    
+    .services h2::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background-color: var(--primary-color);
+    }
+    
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+.service-card {
+  --primary-gradient: linear-gradient(135deg, #1c5af0, #dbe1f0, #3bfe3e);
+  --transition: all 0.3s ease; /* se define la variable transition */
+
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  transition: var(--transition);
+  background: var(--primary-gradient); /* se aplica el degradado */
+  color: white; /* para que el texto se vea bien sobre el fondo */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+    
+    .service-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .service-card i {
+      font-size: 3rem;
+      color: #ff0505;
+      margin-bottom: 1.5rem;
+    }
+    
+    .service-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #050505;
+    }
+    
+    .service-card p {
+      color: #000000;
+      font-size: 1rem;
+    }
+    
+    /* Frame para cargar contenido */
+    .content-frame {
+      width: 100%;
+      min-height: 800px; /* Altura mínima, se ajustará al contenido */
+      border: none;
+      display: none; /* Oculto por defecto */
+    }
+    
+    /* Area de contenido principal */
+    .main-content {
+      width: 100%;
+    }
+    
+    /* Footer Styles */
+    footer {
+      background-color: var(--dark-color);
+      color: white;
+      padding-top: 50px;
+    }
+    
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      padding-bottom: 30px;
+    }
+    
+    .footer-section h4 {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    
+    .footer-section h4::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 50px;
+      height: 2px;
+      background-color: var(--primary-color);
+    }
+    
+    .footer-section p {
+      margin-bottom: 10px;
+    }
+    
+    .footer-section ul {
+      list-style: none;
+    }
+    
+    .footer-section ul li {
+      margin-bottom: 10px;
+    }
+    
+    .footer-section a {
+      text-decoration: none;
+      color: #ccc;
+      transition: var(--transition);
+    }
+    
+    .footer-section a:hover {
+      color: var(--primary-color);
+      padding-left: 5px;
+    }
+    
+    .redes-sociales {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .redes-sociales a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+    
+    .redes-sociales a:hover {
+      background-color: var(--primary-color);
+      transform: translateY(-5px);
+    }
+    
+    .footer-bottom {
+      text-align: center;
+      padding: 20px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 14px;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .top-bar .container {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .menu-toggle {
+        display: block;
+      }
+      
+      .nav-links {
+        position: absolute;
+        flex-direction: column;
+        background-color: white;
+        width: 100%;
+        left: 0;
+        top: 90px;
+        padding: 20px;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        transition: var(--transition);
+      }
+      
+      .nav-links.active {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      }
+      
+      .nav-links li {
+        margin: 15px 0;
+      }
+      
+      .slide-content {
+        padding: 20px;
+      }
+      
+      .slide-content h1 {
+        font-size: 1.8rem;
+      }
+      
+      .slide-content p {
+        font-size: 1rem;
+      }
+      
+      .slider-container {
+        height: 450px;
+      }
+      
+      .services-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .slide-content h1 {
+        font-size: 1.5rem;
+      }
+      
+      .slider-container {
+        height: 350px;
+      }
+      
+      .slider-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+      
+      .services h2 {
+        font-size: 2rem;
+      }
+      
+      .service-card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- HEADER -->
+<header>
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="container">
+      <div class="contact-info">
+        <span><i class="fas fa-envelope"></i> aputech2013@gmail.com</span>
+        <span><i class="fas fa-phone"></i> 983624067</span>
+      </div>
+      <div class="social-links">
+        <a href="https://web.facebook.com/Aputech.com.pe" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://twitter.com/aputech" target="_blank"><i class="fab fa-twitter"></i></a>
+        <a href="https://linkedin.com/company/aputech" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="https://instagram.com/aputech" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/51983624067" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container">
+        <div class="logo">
+          <img src="img/Aputech.jpg" alt="APUTECH" height="60" />
+        </div>
+        <button class="menu-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links">
+          <li><a href="#" onclick="showHome()">INICIO</a></li>
+          <li><a href="#" onclick="loadContent('paginas/servicios.html')">SERVICIOS</a></li>
+          <li><a href="#" onclick="loadContent('paginas/nosotros.html')">NOSOTROS</a></li>
+          <li><a href="#" onclick="loadContent('paginas/mantenimiento.html')">MANTENIMIENTO</a></li>
+          <li><a href="#" onclick="loadContent('paginas/productos.html')">PRODUCTOS</a></li>
+          <li><a href="#" onclick="loadContent('paginas/reservaciones.html')">RESERVACIONES</a></li>
+          <li><a href="#" onclick="loadContent('paginas/contacto.html')">CONTACTO</a></li>
+          <li><a href="#" onclick="loadContent('paginas/metodosdepago.html')">MÉTODOS DE PAGO</a></li>
+          <li><a href="#" onclick="loadContent('paginas/pagar_con_yape.html')">YAPE AQUI</a></li> 
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <!-- Área para contenido principal (página de inicio) -->
+    <div class="main-content" id="home-content">
+      <!-- Slider / Hero -->
+        <div class="slider-container">
+        <div class="slider">
+          <div class="slide active">
+            <img src="img/aputechR.jpg">
+            <div class="slide-content">
+            </div>
+          </div>
+        <div class="slide">
+            <img src="img/falta.jpg" alt="Servicios Informáticos" />
+            <div class="slide-content">
+              <h1>Venta de todo tipo de material informático</h1>
+              <p>
+                Las mejores marcas del mercado en hardware, software, impresoras,
+                periféricos, consumibles, sistemas de almacenamiento, y seguridad,
+                servidores y telefonía IP.
+              </p>
+              <a href="#" onclick="loadContent('paginas/productos.html')" class="btn-primary">Ver Productos</a>
+            </div>
+          </div>
+          <div class="slide">
+            <img src="img/reparacion.jpg" alt="Soluciones Empresariales" />
+            <div class="slide-content">
+              <h1>Soluciones Empresariales</h1>
+              <p>
+                Ofrecemos servicios integrales de TI para empresas, incluyendo
+                mantenimiento, redes y seguridad informática.
+              </p>
+              <a href="#" onclick="loadContent('paginas/servicios.html')" class="btn-primary">Nuestros Servicios</a>
+            </div>
+          </div>
+          <div class="slide">
+            <img src="img/future.jpg" alt="Soporte Técnico Especializado" />
+            <div class="slide-content">
+              <h1>Soporte Técnico Especializado</h1>
+              <p>
+                Contamos con un equipo de profesionales certificados para resolver
+                cualquier problema técnico.
+              </p>
+              <a href="#" onclick="loadContent('paginas/contacto.html')" class="btn-primary">Contáctanos</a>
+            </div>
+          </div>
+        </div>
+        <button class="slider-btn prev">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="slider-btn next">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+<style>
+  .aputech-contenedor {
+    max-width: 90%;
+    margin: 60px auto 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.6s ease-in-out;
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .aputech-contenedor.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .aputech-video {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .aputech-info {
+    max-width: 90%;
+    margin: 20px auto 60px auto;
+    padding: 25px;
+    background-color: #f1efe2;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .aputech-info h2 {
+    color: #111;
+    font-size: 26px;
+    margin-bottom: 15px;
+  }
+
+  .aputech-info p {
+    color: #444;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+</style>
+
+<div class="aputech-contenedor" id="aputechVideo">
+  <iframe 
+    class="aputech-video" 
+    width="560" 
+    height="315" 
+    src="https://www.youtube.com/embed/23I51XTjyt0" 
+    title="YouTube video player" 
+    frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+    allowfullscreen>
+  </iframe>
+</div>
+
+
+<div class="aputech-info">
+  <h2>¿Por qué elegirnos?</h2>
+  <p>
+    En <strong>APUTECH</strong>, nos dedicamos a ofrecer soluciones informáticas de alta calidad.<br>
+    Nuestro equipo de expertos está listo para atender tus necesidades y brindarte el mejor servicio.<br>
+    Con años de experiencia en el sector, garantizamos un servicio confiable y eficiente.
+  </p>
+</div>
+
+<script>
+  // Animación al hacer scroll
+  const contenedor = document.getElementById("aputechVideo");
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  }, { threshold: 0.2 });
+
+  observer.observe(contenedor);
+</script>
+
+
+      <!-- Services Section -->
+      <section class="services" id="servicios">
+        <div class="container">
+          <h2>Nuestros Servicios</h2>
+          <div class="services-grid">
+            <div class="service-card">
+              <i class="fas fa-laptop-medical"></i>
+              <h3>Reparación y Mantenimiento</h3>
+              <p>Servicio técnico especializado para computadoras y laptops</p>
+            </div>
+            <div class="service-card">
+              <i class="fas fa-microchip"></i>
+              <h3>Venta de Hardware</h3>
+              <p>Componentes y accesorios de las mejores marcas</p>
+            </div>
+            <div class="service-card">
+              <i class="fas fa-desktop"></i>
+              <h3>Instalación de Software</h3>
+              <p>Sistemas operativos y programas especializados</p>
+            </div>
+            <div class="service-card">
+              <i class="fas fa-database"></i>
+              <h3>Recuperación de Datos</h3>
+              <p>Rescate de información de dispositivos dañados</p>
+            </div>
+            <div class="service-card">
+              <i class="fas fa-tachometer-alt"></i>
+              <h3>Optimización</h3>
+              <p>Mejora del rendimiento de tu equipo</p>
+            </div>
+            <div class="service-card">
+              <i class="fas fa-headset"></i>
+              <h3>Soporte Técnico</h3>
+              <p>Asesoría personalizada para tus necesidades</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Iframe para cargar otras páginas -->
+    <iframe id="content-frame" class="content-frame" src="" frameborder="0"></iframe>
+  </main>
+
+<!-- FOOTER PROFESIONAL -->
+<footer class="modern-footer">
+  <div class="footer-content container">
+    <!-- Sección de Contacto -->
+    <div class="footer-section contact-section">
+      <h4 class="section-title">Contacto</h4>
+      <div class="contact-info">
+        <p class="contact-item tooltip-item" data-tooltip="Llámanos al 983624067" data-copy="983624067">
+          <i class="fas fa-phone animated-icon"></i> 
+          <span>983624067</span>
+          <span class="copy-notification"></span>
+        </p>
+        <p class="contact-item tooltip-item" data-tooltip="Envíanos un correo" data-copy="aputech2013@gmail.com">
+          <i class="fas fa-envelope animated-icon"></i> 
+          <span>aputech2013@gmail.com</span>
+          <span class="copy-notification"></span>
+        </p>
+        <p class="contact-item tooltip-item" data-tooltip="Ubicación">
+          <i class="fas fa-map-marker-alt animated-icon"></i> 
+          <span>Urb. señor de los milagros abancay, apurimac</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Sección de Enlaces -->
+    <div class="footer-section links-section">
+      <h4 class="section-title">Enlaces Rápidos</h4>
+      <ul class="footer-links">
+        <li><a href="#" class="link-item" onclick="loadContent('paginas/pagar_con_yape.html')"><i class="fas fa-chevron-right"></i> Pago directo con yape</a></li>
+        <li><a href="#" class="link-item" onclick="loadContent('paginas/servicios.html')"><i class="fas fa-chevron-right"></i> Servicios</a></li>
+        <li><a href="#" class="link-item" onclick="loadContent('paginas/metodosdepago.html')"><i class="fas fa-chevron-right"></i> Métodos de Pago</a></li>
+        <li><a href="#" class="link-item" onclick="loadContent('paginas/productos.html')"><i class="fas fa-chevron-right"></i> Productos</a></li>
+        <li><a href="#" class="link-item" onclick="loadContent('paginas/contacto.html')"><i class="fas fa-chevron-right"></i> Contacto</a></li>
+      </ul>
+    </div>
+
+    <!-- Sección de Redes Sociales -->
+    <div class="footer-section social-section">
+      <h4 class="section-title">Síguenos</h4>
+      <div class="social-grid">
+        <a href="https://web.facebook.com/Aputech.com.pe" target="_blank" class="social-card facebook" data-network="facebook">
+          <i class="fab fa-facebook-f"></i>
+          <span class="social-tooltip">Facebook</span>
+          <div class="social-pulse"></div>
+        </a>
+        <a href="https://twitter.com/aputech" target="_blank" class="social-card twitter" data-network="twitter">
+          <i class="fab fa-twitter"></i>
+          <span class="social-tooltip">Twitter</span>
+          <div class="social-pulse"></div>
+        </a>
+        <a href="https://linkedin.com/company/aputech" target="_blank" class="social-card linkedin" data-network="linkedin">
+          <i class="fab fa-linkedin-in"></i>
+          <span class="social-tooltip">LinkedIn</span>
+          <div class="social-pulse"></div>
+        </a>
+        <a href="https://instagram.com/aputech" target="_blank" class="social-card instagram" data-network="instagram">
+          <i class="fab fa-instagram"></i>
+          <span class="social-tooltip">Instagram</span>
+          <div class="social-pulse"></div>
+        </a>
+        <a href="https://wa.me/51983624067" target="_blank" class="social-card whatsapp" data-network="whatsapp">
+          <i class="fab fa-whatsapp"></i>
+          <span class="social-tooltip">WhatsApp</span>
+          <div class="social-pulse"></div>
+        </a>
+      </div>
+      <div class="social-analytics">
+        <div class="followers-counter">
+          <i class="fas fa-users"></i>
+          <span class="counter" data-target="12500">0</span> seguidores
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <p>&copy; <span class="year"></span> APUTECH TECNOLOGI. Todos los derechos reservados.</p>
+    <div class="scroll-top">
+      <i class="fas fa-arrow-up"></i>
+    </div>
+  </div>
+
+  <!-- Floating Notification -->
+  <div class="floating-notification"></div>
+</footer>
+
+<!-- Estilos CSS -->
+<style>
+  :root {
+    --primary-color: #ff2727;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+    --facebook: #3b5998;
+    --twitter: #1da1f2;
+    --linkedin: #0077b5;
+    --instagram: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    --whatsapp: #25d366;
+    --shadow: 0 4px 6px rgb(239 255 0);
+    --transition: all 0.3s ease;
+  }
+
+  /* Estructura Principal */
+  .modern-footer {
+    background: linear-gradient(135deg, #1d2b6b, #632d72);
+    color: var(--light-color);
+    padding: 3rem 0 0;
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+  }
+
+  .modern-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-color), var(--accent-color), var(--secondary-color));
+    background-size: 200% auto;
+    animation: gradientBG 3s linear infinite;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .footer-section {
+    flex: 1;
+    min-width: 250px;
+    padding: 0 20px;
+    margin-bottom: 30px;
+    position: relative;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+    font-weight: 600;
+  }
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--secondary-color);
+    border-radius: 3px;
+  }
+
+  /* Sección de Contacto */
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    position: relative;
+    cursor: pointer;
+    transition: var(--transition);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .contact-item:hover {
+    transform: translateX(5px);
+  }
+
+  .animated-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: var(--transition);
+  }
+
+  .contact-item:hover .animated-icon {
+    background: var(--secondary-color);
+    transform: rotate(10deg);
+  }
+
+  .copy-notification {
+    position: absolute;
+    right: 0;
+    background: var(--secondary-color);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    opacity: 0;
+    transition: var(--transition);
+  }
+
+  /* Sección de Enlaces */
+  .footer-links {
+    list-style: none;
+    padding: 0;
+  }
+
+  .link-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    color: var(--light-color);
+    text-decoration: none;
+    transition: var(--transition);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .link-item i {
+    font-size: 0.8rem;
+    transition: var(--transition);
+  }
+
+  .link-item:hover {
+    color: var(--secondary-color);
+    transform: translateX(5px);
+  }
+
+  .link-item:hover i {
+    color: var(--accent-color);
+  }
+
+  /* Sección de Redes Sociales */
+  .social-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .social-card {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+  }
+
+  .social-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-100%) skewX(-30deg);
+    transition: var(--transition);
+  }
+
+  .social-card:hover::before {
+    transform: translateX(200%) skewX(-30deg);
+  }
+
+  .social-card:hover {
+    transform: translateY(-5px) scale(1.1);
+  }
+
+  .social-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    pointer-events: none;
+    box-shadow: var(--shadow);
+  }
+
+  .social-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--dark-color) transparent transparent transparent;
+  }
+
+  .social-card:hover .social-tooltip {
+    opacity: 1;
+    visibility: visible;
+    bottom: 120%;
+  }
+
+  .social-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0;
+    animation: pulse 2s infinite;
+  }
+
+  .facebook { background: var(--facebook); }
+  .twitter { background: var(--twitter); }
+  .linkedin { background: var(--linkedin); }
+  .instagram { background: var(--instagram); }
+  .whatsapp { background: var(--whatsapp); }
+
+  .followers-counter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 15px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  .counter {
+    font-weight: bold;
+    color: var(--secondary-color);
+  }
+
+  /* Footer Bottom */
+  .footer-bottom {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    margin-top: 30px;
+  }
+
+  .scroll-top {
+    position: absolute;
+    right: 30px;
+    bottom: 20px;
+    width: 40px;
+    height: 40px;
+    background: var(--secondary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+  }
+
+  .scroll-top:hover {
+    background: var(--accent-color);
+    transform: translateY(-3px);
+  }
+
+  /* Floating Notification */
+  .floating-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--accent-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: var(--shadow);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: var(--transition);
+    z-index: 1000;
+  }
+
+  /* Animaciones */
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(0.8); opacity: 0.8; }
+    70% { transform: scale(1.2); opacity: 0; }
+    100% { transform: scale(0.8); opacity: 0; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+    }
+    
+    .footer-section {
+      min-width: 100%;
+    }
+    
+    .scroll-top {
+      right: 15px;
+      bottom: 15px;
+    }
+  }
+</style>
+
+<!-- JavaScript Avanzado -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Actualizar año del copyright
+    document.querySelector('.year').textContent = new Date().getFullYear();
+
+    // Animación del contador de seguidores
+    const counter = document.querySelector('.counter');
+    const target = parseInt(counter.getAttribute('data-target'));
+    let current = 0;
+    const increment = target / 50;
+    
+    const counterInterval = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        clearInterval(counterInterval);
+        current = target;
+      }
+      counter.textContent = Math.floor(current).toLocaleString();
+    }, 30);
+
+    // Efectos de copiado para información de contacto
+    const contactItems = document.querySelectorAll('.contact-item[data-copy]');
+    const notification = document.querySelector('.floating-notification');
+    
+    contactItems.forEach(item => {
+      item.addEventListener('click', function() {
+        const textToCopy = this.getAttribute('data-copy');
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          showNotification(`¡Copiado! ${textToCopy}`);
+        });
+      });
+    });
+
+    function showNotification(message) {
+      notification.textContent = message;
+      notification.style.opacity = '1';
+      notification.style.transform = 'translateY(0)';
+      
+      setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateY(100px)';
+      }, 3000);
+    }
+
+    // Botón de scroll to top
+    const scrollTopBtn = document.querySelector('.scroll-top');
+    
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    // Mostrar/ocultar botón de scroll
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        scrollTopBtn.style.opacity = '1';
+        scrollTopBtn.style.visibility = 'visible';
+      } else {
+        scrollTopBtn.style.opacity = '0';
+        scrollTopBtn.style.visibility = 'hidden';
+      }
+    });
+
+    // Efectos de sonido para interacciones
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let canPlaySound = false;
+    
+    document.addEventListener('click', () => { canPlaySound = true; }, { once: true });
+
+    function playSound(frequency, type) {
+      if (!canPlaySound) return;
+      
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.type = type || 'sine';
+      oscillator.frequency.value = frequency || 440;
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      gainNode.gain.value = 0.1;
+      
+      oscillator.start();
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.5);
+      oscillator.stop(audioContext.currentTime + 0.5);
+    }
+
+    // Efectos para redes sociales
+    const socialCards = document.querySelectorAll('.social-card');
+    
+    socialCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        playSound(500 + Math.random() * 500, 'sine');
+        
+        // Efecto de partículas al hacer hover
+        if (card.querySelector('.particles')) return;
+        
+        const particles = document.createElement('div');
+        particles.className = 'particles';
+        card.appendChild(particles);
+        
+        for (let i = 0; i < 5; i++) {
+          const particle = document.createElement('span');
+          particle.style.position = 'absolute';
+          particle.style.width = '4px';
+          particle.style.height = '4px';
+          particle.style.backgroundColor = 'white';
+          particle.style.borderRadius = '50%';
+          particle.style.opacity = '0';
+          
+          const angle = Math.random() * Math.PI * 2;
+          const distance = 30 + Math.random() * 20;
+          
+          particle.style.left = '50%';
+          particle.style.top = '50%';
+          particle.style.transform = 'translate(-50%, -50%)';
+          
+          particles.appendChild(particle);
+          
+          // Animación
+          particle.animate([
+            { opacity: 0, transform: 'translate(-50%, -50%) scale(0)' },
+            { opacity: 0.8, transform: `translate(-50%, -50%) translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(1)` },
+            { opacity: 0, transform: `translate(-50%, -50%) translate(${Math.cos(angle) * distance * 1.5}px, ${Math.sin(angle) * distance * 1.5}px) scale(0)` }
+          ], {
+            duration: 1000 + Math.random() * 500,
+            delay: i * 100
+          });
+        }
+        
+        setTimeout(() => {
+          particles.remove();
+        }, 1500);
+      });
+      
+      card.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+          e.preventDefault();
+          playSound(800, 'square');
+          
+          // Efecto ripple
+          const ripple = document.createElement('span');
+          ripple.style.position = 'absolute';
+          ripple.style.borderRadius = '50%';
+          ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+          ripple.style.transform = 'scale(0)';
+          ripple.style.pointerEvents = 'none';
+          
+          const rect = card.getBoundingClientRect();
+          const size = Math.max(rect.width, rect.height) * 2;
+          ripple.style.width = `${size}px`;
+          ripple.style.height = `${size}px`;
+          ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+          ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+          
+          card.appendChild(ripple);
+          
+          // Animación
+          const animation = ripple.animate([
+            { transform: 'scale(0)', opacity: 1 },
+            { transform: 'scale(1)', opacity: 0 }
+          ], {
+            duration: 600,
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+          });
+          
+          animation.onfinish = () => ripple.remove();
+          
+          // Redirigir después del efecto
+          setTimeout(() => {
+            window.open(card.href, '_blank');
+          }, 300);
+        }
+      });
+    });
+
+    // Efecto de aparición para las secciones
+    const footerSections = document.querySelectorAll('.footer-section');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    footerSections.forEach(section => {
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(20px)';
+      section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(section);
+    });
+  });
+</script>
+
+<!-- Botón flotante de WhatsApp -->
+<a href="https://wa.me/51983624067
+?text=Hola%20APUTECH,%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20los%20servicios%20que%20ofrecen%20en%20venta%20y%20reparaci%C3%B3n%20de%20equipos%20de%20inform%C3%A1tica.%20Quedo%20atento%20a%20su%20respuesta.%20Muchas%20gracias." 
+   class="whatsapp-float" 
+   target="_blank" 
+   title="Escríbenos por WhatsApp">
+  <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp">
+</a>
+
+
+
+<!-- Internal CSS -->
+<style>
+  /* Botón flotante WhatsApp */
+  .whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 40px;
+    right: 40px;
+    background-color: #25d366;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+  }
+  .whatsapp-float:hover {
+    background-color: #1ebe57;
+    text-decoration: none;
+    color: #fff;
+  }
+
+  /* Tooltip general */
+  .tooltip {
+    position: relative;
+    cursor: pointer;
+    color: #ffffff;
+  }
+  .tooltip:hover {
+    color: #1053d9; /* color al pasar el mouse */
+  }
+
+  /* Tooltip mensaje */
+  .tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%; /* arriba del texto */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #27b33f;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+  }
+
+  /* Flecha del tooltip */
+  .tooltip::before {
+    content: "";
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #25d366 transparent transparent transparent;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+  }
+
+  /* Mostrar tooltip al hacer hover */
+  .tooltip:hover::after,
+  .tooltip:hover::before {
+    opacity: 1;
+  }
+</style>
+
+<!-- Internal JavaScript -->
+<script>
+  // Menu Toggle Functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if(menuToggle && navLinks){
+      menuToggle.addEventListener('click', function() {
+        navLinks.classList.toggle('active');
+        
+        // Toggle icon between bars and times
+        const icon = menuToggle.querySelector('i');
+        if (icon.classList.contains('fa-bars')) {
+          icon.classList.remove('fa-bars');
+          icon.classList.add('fa-times');
+        } else {
+          icon.classList.remove('fa-times');
+          icon.classList.add('fa-bars');
+        }
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        const isClickInsideNav = navLinks.contains(event.target);
+        const isClickOnToggle = menuToggle.contains(event.target);
+        
+        if (navLinks.classList.contains('active') && !isClickInsideNav && !isClickOnToggle) {
+          navLinks.classList.remove('active');
+          const icon = menuToggle.querySelector('i');
+          icon.classList.remove('fa-times');
+          icon.classList.add('fa-bars');
+        }
+      });
+    }
+    
+    // Slider Functionality
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+    let currentSlide = 0;
+    const totalSlides = slides.length;
+    
+    // Function to show a specific slide
+    function showSlide(index) {
+      // Hide all slides
+      slides.forEach(slide => {
+        slide.classList.remove('active');
+      });
+      
+      // Show the current slide
+      if(slides[index]) slides[index].classList.add('active');
+    }
+    
+    // Function to show the next slide
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      showSlide(currentSlide);
+    }
+    
+    // Function to show the previous slide
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      showSlide(currentSlide);
+    }
+    
+    // Event listeners for the next and previous buttons
+    if(nextBtn) nextBtn.addEventListener('click', nextSlide);
+    if(prevBtn) prevBtn.addEventListener('click', prevSlide);
+    
+    // Auto-slide functionality
+    let slideInterval = setInterval(nextSlide, 5000);
+    
+    // Pause auto-slide on hover
+    const sliderContainer = document.querySelector('.slider-container');
+    
+    if(sliderContainer){
+      sliderContainer.addEventListener('mouseenter', () => {
+        clearInterval(slideInterval);
+      });
+      
+      sliderContainer.addEventListener('mouseleave', () => {
+        slideInterval = setInterval(nextSlide, 5000);
+      });
+    }
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        prevSlide();
+      } else if (e.key === 'ArrowRight') {
+        nextSlide();
+      }
+    });
+  });
+
+  // Funciones para cargar contenido en el iframe
+  function loadContent(url) {
+    const homeContent = document.getElementById('home-content');
+    const contentFrame = document.getElementById('content-frame');
+    
+    // Ocultar contenido de inicio
+    if(homeContent) homeContent.style.display = 'none';
+    
+    // Mostrar iframe y cargar URL
+    if(contentFrame) {
+      contentFrame.style.display = 'block';
+      contentFrame.src = url;
+    }
+    
+    // Scroll al inicio de la página
+    window.scrollTo(0, 0);
+  }
+  
+  // Función para mostrar la página de inicio
+  function showHome() {
+    const homeContent = document.getElementById('home-content');
+    const contentFrame = document.getElementById('content-frame');
+    
+    // Ocultar iframe
+    if(contentFrame) {
+      contentFrame.style.display = 'none';
+      contentFrame.src = '';
+    }
+    
+    // Mostrar contenido de inicio
+    if(homeContent) homeContent.style.display = 'block';
+    
+    // Scroll al inicio de la página
+    window.scrollTo(0, 0);
+  }
+</script>
+</body>
+</html>

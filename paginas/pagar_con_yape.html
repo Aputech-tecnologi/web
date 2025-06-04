@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago con Yape</title>
+    <style>
+        /* Reset y estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Efecto de burbujas decorativas */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(110, 72, 170, 0.1);
+            z-index: 0;
+        }
+
+        .bubble-1 {
+            width: 150px;
+            height: 150px;
+            top: -50px;
+            right: -50px;
+        }
+
+        .bubble-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -80px;
+            left: -80px;
+        }
+
+        /* Header con nuevo gradiente */
+        .header {
+            background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 30%, #2ab5d1 70%, #4CAF50 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.2) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .yape-logo {
+            width: 100px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        /* Contenido principal */
+        .main-content {
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .payment-method {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .payment-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+.payment-title h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: inline-block;
+    background: linear-gradient(135deg, #6e48aa, #9d50bb, #2ab5d1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text; /* Opcional, para compatibilidad futura */
+}
+
+
+        .payment-title p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* QR Container más grande y con mejor diseño */
+        .qr-container {
+            width: 320px;
+            height: 320px;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 25px 0;
+            position: relative;
+            overflow: hidden;
+            background-color: #f9f9f9;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .qr-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(157, 80, 187, 0.15);
+        }
+
+        .qr-image {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+        }
+
+        .qr-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(110, 72, 170, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .qr-container:hover .qr-overlay {
+            opacity: 1;
+        }
+
+        .qr-overlay i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        /* Botones con nuevo diseño */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5d3a99 0%, #8c42a8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(110, 72, 170, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #2ab5d1 0%, #4CAF50 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #1fa3be 0%, #3d8b40 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(42, 181, 209, 0.3);
+        }
+
+        /* Detalles de pago mejorados */
+        .payment-details {
+            background: linear-gradient(135deg, rgba(246, 248, 252, 0.9) 0%, rgba(240, 242, 246, 0.9) 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 40px;
+            border: 1px solid rgba(0,0,0,0.05);
+            backdrop-filter: blur(5px);
+        }
+
+        .payment-details h3 {
+            color: #6e48aa;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(0,0,0,0.08);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #6e48aa;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: 5px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            color: #9d50bb;
+            transform: scale(1.1);
+        }
+
+        /* Instrucciones con nuevo diseño */
+        .instructions {
+            margin-top: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(249, 244, 255, 0.9) 0%, rgba(242, 237, 250, 0.9) 100%);
+            border-radius: 15px;
+            border-left: 5px solid #9d50bb;
+            box-shadow: 0 5px 15px rgba(157, 80, 187, 0.05);
+        }
+
+        .instructions h3 {
+            color: #6e48aa;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instructions ol {
+            padding-left: 25px;
+        }
+
+        .instructions li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 10px;
+        }
+
+        .instructions li::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            background: #9d50bb;
+            border-radius: 50%;
+        }
+
+        /* Temporizador de oferta */
+        .offer-timer {
+            background: linear-gradient(135deg, rgba(255, 240, 240, 0.9) 0%, rgba(255, 230, 230, 0.9) 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 0, 0, 0.1);
+        }
+
+        .offer-timer h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .timer-display {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Botón de confirmación mejorado */
+        .confirm-btn {
+            background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 30%, #2ab5d1 70%, #4CAF50 100%);
+            background-size: 300% 100%;
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-top: 40px;
+            width: 100%;
+            transition: all 0.5s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(110, 72, 170, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .confirm-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #4CAF50 0%, #2ab5d1 30%, #9d50bb 70%, #6e48aa 100%);
+            background-size: 300% 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: -1;
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(157, 80, 187, 0.4);
+        }
+
+        .confirm-btn:hover::before {
+            opacity: 1;
+        }
+
+        .confirm-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Notificación */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .qr-container {
+                width: 280px;
+                height: 280px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 25px;
+            }
+
+            .qr-container {
+                width: 250px;
+                height: 250px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Burbujas decorativas -->
+    <div class="bubble bubble-1"></div>
+    <div class="bubble bubble-2"></div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <div class="header">
+            <img src="https://images.seeklogo.com/logo-png/39/2/yape-app-logo-png_seeklogo-399697.png" alt="Yape Logo" class="yape-logo">
+            <h1>PAGO CON YAPE</h1>
+            <p>Realiza tu pago de forma rápida, segura y con descuento por tiempo limitado</p>
+        </div>
+
+        <div class="main-content">
+            <div class="payment-method">
+                <div class="payment-title">
+                    <h2><i class="fas fa-qrcode"></i> ESCANEA EL CÓDIGO QR</h2>
+                    <p>Usa la aplicación Yape para escanear este código y completar tu pago</p>
+                </div>
+                
+                <!-- Contenedor QR más grande y permanente -->
+                <div class="qr-container" id="qrContainer">
+                    <!-- Reemplaza la siguiente línea con tu imagen QR -->
+                    <img src="../galeria/QR_YAPE_1.jpg" alt="QR de Yape" class="qr-image" id="qrImage">
+                    
+                    <div class="qr-overlay">
+                        <i class="fas fa-expand"></i>
+                        <p>Ampliar para escanear</p>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="copyNumberBtn">
+                        <i class="fas fa-copy"></i> Copiar Número Yape
+                    </button>
+                    <button class="btn btn-secondary" id="whatsappBtn">
+                        <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
+                    </button>
+                </div>
+            </div>
+
+            <!-- Temporizador de oferta -->
+            <div class="offer-timer">
+                <h3><i class="fas fa-clock"></i> OFERTA POR TIEMPO LIMITADO</h3>
+                <p>¡Descuento especial si pagas ahora!</p>
+                <div class="timer-display" id="timer">05:00</div>
+                <p class="timer-label">Termina en:</p>
+            </div>
+
+            <!-- Detalles de pago -->
+            <div class="payment-details">
+                <h3><i class="fas fa-receipt"></i> DETALLES DEL PAGO</h3>
+<div class="detail-row">
+                    <span class="detail-label"><i class="fas fa-tag"></i> Monto a pagar:</span>
+                    <span class="detail-value">
+  S/ 
+  <input type="number" class="payment-amount" value="50.00" step="0.01" style="width: 80px; padding: 2px; font-size: 1rem; text-align: right;">
+  <span class="original-price" style="text-decoration: line-through; color: #999; font-size: 0.9rem; margin-left: 5px;">
+    
+  </span>
+</span>
+
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fas fa-mobile-alt"></i> Número Yape:</span>
+                    <span class="detail-value">983624067 <button class="copy-btn" data-text="983624067"><i class="fas fa-copy"></i></button></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fas fa-user"></i> Nombre:</span>
+                    <span class="detail-value">Luis Alejandro Palomino Figueroa<button class="copy-btn" data-text="Luis Alejandro Palomino Figueroa"><i class="fas fa-copy"></i></button></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fas fa-bolt"></i> Estado:</span>
+                    <span class="detail-value" style="color: #4CAF50;"><i class="fas fa-check-circle"></i> Activo</span>
+                </div>
+            </div>
+
+            <!-- Instrucciones -->
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> ¿CÓMO PAGAR CON YAPE?</h3>
+                <ol>
+                    <li>Abre la aplicación Yape en tu celular</li>
+                    <li>Selecciona la opción "Pagar con Yape" o "Escanear QR"</li>
+                    <li>Enfoca la cámara hacia el código QR de arriba</li>
+                    <li>Confirma que el monto sea <strong>S/ 50.00</strong> y el destinatario <strong>Tienda Online</strong></li>
+                    <li>Completa la transacción y guarda el comprobante</li>
+                    <li>Si tienes problemas, copia el número Yape y paga manualmente</li>
+                </ol>
+            </div>
+
+            <!-- Botón de confirmación -->
+            <button class="confirm-btn pulse" id="confirmBtn">
+                <i class="fas fa-check-circle"></i> YA PAGUÉ - CONFIRMAR
+            </button>
+        </div>
+    </div>
+
+    <!-- Notificación -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">¡Texto copiado al portapapeles!</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos del DOM
+            const qrContainer = document.getElementById('qrContainer');
+            const copyNumberBtn = document.getElementById('copyNumberBtn');
+            const whatsappBtn = document.getElementById('whatsappBtn');
+            const confirmBtn = document.getElementById('confirmBtn');
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            const timerDisplay = document.getElementById('timer');
+            const copyButtons = document.querySelectorAll('.copy-btn');
+
+            // Configuración del temporizador (5 minutos)
+            let timeLeft = 5 * 60;
+            
+            // Actualizar temporizador cada segundo
+            const timer = setInterval(function() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Cambiar color cuando queden menos de 2 minutos
+                if (timeLeft <= 120) {
+                    timerDisplay.style.color = '#e74c3c';
+                    timerDisplay.style.animation = 'pulse 1s infinite';
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    timerDisplay.textContent = "00:00";
+                    document.querySelector('.offer-timer h3').textContent = "¡Oferta finalizada!";
+                } else {
+                    timeLeft--;
+                }
+            }, 1000);
+
+            // Copiar número Yape
+            copyNumberBtn.addEventListener('click', function() {
+                navigator.clipboard.writeText('999888777');
+                showNotification('¡Número Yape copiado al portapapeles!');
+            });
+
+            // Botón de WhatsApp
+whatsappBtn.addEventListener('click', function() {
+    const monto = document.querySelector('.payment-amount').value;
+    const message = encodeURIComponent(
+        "\uD83D\uDCB5 *Pago con Yape*\n\n" +  // 💵
+        "\uD83D\uDCF1 *Número Yape:* 983624067\n" +  // 📱
+        "\uD83D\uDC64 *Nombre:* Tienda Aputech\n" +  // 👤
+        "\uD83D\uDCB0 *Monto:* S/ " + monto + "\n\n" +  // 💰
+        "\u2705 Por favor confirma que los datos son correctos. ¡Gracias!"  // ✅
+    );
+    window.open("https://wa.me/51983624067?text=" + message, '_blank');
+});
+
+
+
+            // Botones de copiar individuales
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const textToCopy = this.getAttribute('data-text');
+                    navigator.clipboard.writeText(textToCopy);
+                    showNotification(`¡"${textToCopy}" copiado al portapapeles!`);
+                });
+            });
+
+            // Confirmar pago
+            confirmBtn.addEventListener('click', function() {
+                // Animación de carga
+                confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFICANDO PAGO...';
+                confirmBtn.style.background = 'linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%)';
+                
+                // Simular verificación
+                setTimeout(function() {
+                    // Mostrar mensaje de éxito
+                    showNotification('¡Pago verificado con éxito! Gracias por tu compra.', 5000);
+                    
+                    // Resetear botón después de 3 segundos
+                    setTimeout(function() {
+                        confirmBtn.innerHTML = '<i class="fas fa-check-circle"></i> PAGO CONFIRMADO';
+                        confirmBtn.style.background = '#4CAF50';
+                    }, 3000);
+                }, 2000);
+            });
+
+            // Mostrar notificación
+            function showNotification(message, duration = 3000) {
+                notificationText.textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(function() {
+                    notification.classList.remove('show');
+                }, duration);
+            }
+
+            // Efecto hover para el QR
+            qrContainer.addEventListener('click', function() {
+                // Crear modal para ver el QR en grande
+                const modal = document.createElement('div');
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.right = '0';
+                modal.style.bottom = '0';
+                modal.style.backgroundColor = 'rgba(0,0,0,0.9)';
+                modal.style.display = 'flex';
+                modal.style.justifyContent = 'center';
+                modal.style.alignItems = 'center';
+                modal.style.zIndex = '1000';
+                modal.style.cursor = 'zoom-out';
+                
+                const img = document.createElement('img');
+                img.src = document.getElementById('qrImage').src;
+                img.style.maxWidth = '90%';
+                img.style.maxHeight = '90%';
+                img.style.borderRadius = '15px';
+                img.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+                
+                modal.appendChild(img);
+                document.body.appendChild(modal);
+                
+                modal.addEventListener('click', function() {
+                    document.body.removeChild(modal);
+                });
+            });
+
+            // Animación de entrada
+            setTimeout(function() {
+                document.querySelector('.container').style.opacity = '1';
+                document.querySelector('.container').style.transform = 'translateY(0)';
+            }, 100);
+
+            // Inicializar estilos para animación de entrada
+            document.querySelector('.container').style.opacity = '0';
+            document.querySelector('.container').style.transform = 'translateY(20px)';
+            document.querySelector('.container').style.transition = 'all 0.6s ease';
+        });
+
+        // Animación de pulso para el temporizador
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.05); opacity: 0.8; }
+                100% { transform: scale(1); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

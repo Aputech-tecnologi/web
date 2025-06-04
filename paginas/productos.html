@@ -1,0 +1,3013 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Productos - Tienda Online</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Font Awesome para los íconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* ======= RESET Y ESTILOS GLOBALES ======= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #12224e4f;
+      color: #333;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    
+    /* ======= HEADER: MARCAS DESTACADAS ======= */
+    .marcas-header {
+      text-align: center;
+      padding: 20px;
+      background-color: #e9e55778;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .marcas-header h1 {
+      font-size: 2.5rem;
+      color: #000000;
+      margin-bottom: 10px;
+    }
+    .marcas-header img {
+      width: 100%;
+      max-width: 1200px;
+      height: auto;
+      border-radius: 8px;
+    }
+    
+    /* ======= BOTÓN FAVORITOS ======= */
+    .favorites-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #ff4757;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: background 0.3s ease;
+    }
+    .favorites-btn:hover {
+      background: #e84118;
+    }
+    
+    /* ======= FILTROS Y BÚSQUEDA ======= */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+      padding: 0 20px;
+    }
+    .filters input[type="text"],
+    .filters select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+      width: 200px;
+    }
+    
+    /* ======= SECCIÓN DE PRODUCTOS ======= */
+    .productos-container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .productos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .producto-card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .producto-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .producto-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .producto-info {
+      padding: 15px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .producto-info h3 {
+      font-size: 1.2rem;
+      color: #006837;
+    }
+    .producto-info p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .producto-precio {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #ff4757;
+    }
+    .producto-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: auto;
+      gap: 10px;
+    }
+    .btn, .btn-like {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .btn {
+      background: #006837;
+      color: #fff;
+    }
+    .btn:hover {
+      background: #004f2c;
+    }
+    .btn-like {
+      background: #fff;
+      color: #ff4757;
+      border: 1px solid #ff4757;
+    }
+    .btn-like:hover {
+      background: #ff4757;
+      color: #fff;
+    }
+    
+    /* ======= MODAL DE FAVORITOS ======= */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+    }
+    .modal-content {
+      background: #fff;
+      width: 90%;
+      max-width: 600px;
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+    }
+    .modal-content h2 {
+      margin-bottom: 15px;
+      color: #006837;
+    }
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #333;
+    }
+    .favorites-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .favorite-item {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .favorite-item:last-child {
+      border-bottom: none;
+    }
+    .favorite-item button {
+      background: transparent;
+      border: none;
+      color: #ff4757;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+    
+    /* ======= RESPONSIVE ======= */
+    @media (max-width: 768px) {
+      .filters input[type="text"],
+      .filters select {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Botón de Favoritos -->
+  <button class="favorites-btn" onclick="toggleFavoritesModal()">
+    <i class="fas fa-heart"></i> Favoritos
+  </button>
+  
+  <!-- Encabezado: Marcas Destacadas -->
+  <header class="marcas-header">
+    <h1>Marcas Destacadas</h1>
+    <img src="../img/marca.png" alt="Logos de Marcas">
+  </header>
+  
+  <!-- Sección de Filtros y Búsqueda -->
+  <div class="filters">
+    <input type="text" id="searchInput" placeholder="Buscar productos...">
+    <select id="filterBrand">
+      <option value="">Todas las marcas</option>
+      <option value="Dell">Dell</option>
+      <option value="HP">HP</option>
+      <option value="Lenovo">Lenovo</option>
+      <option value="samsung">Samsung</option>
+      <option value="Epson">Epson</option>
+      <option value="LG">LG</option>
+      <option value="Canon">Canon</option>
+      <option value="Acer">Acer</option>
+    </select>
+    
+    <select id="filterProduct">
+        <option value="">Todos los productos</option>
+        <optgroup label="Almacenamiento">
+            <option value="ssd">SSD</option>
+            <option value="hdd">HDD</option>
+            <option value="nvme">NVMe</option>
+            <option value="sata">Cable SATA</option>
+        </optgroup>
+        <optgroup label="Periféricos">
+            <option value="mouse">Mouses</option>
+            <option value="teclado">Teclados</option>
+            <option value="monitor">Monitores</option>
+            <option value="audifonos">Audífonos</option>
+            <option value="parlantes">Parlantes</option>
+            <option value="webcam">Webcam</option>
+            <option value="micrófono">Micrófonos</option>
+        </optgroup>
+        <optgroup label="Componentes">
+            <option value="procesador">Procesador</option>
+            <option value="placa_madre">Placa Madre</option>
+            <option value="ram">Memoria RAM</option>
+            <option value="gpu">Tarjeta Gráfica</option>
+            <option value="psu">Fuente de Poder</option>
+            <option value="refrigeracion">Sistema de Refrigeración</option>
+            <option value="caja">Gabinete</option>
+            <option value="ventilador">Ventilador</option>
+        </optgroup>
+        <optgroup label="Accesorios">
+            <option value="alfombrilla">Alfombrilla</option>
+            <option value="hub_usb">Hub USB</option>
+            <option value="cable_hdmi">Cable HDMI</option>
+            <option value="cable_displayport">Cable DisplayPort</option>
+            <option value="adaptador_wifi">Adaptador WiFi</option>
+            <option value="controlador_rgb">Controlador RGB</option>
+            <option value="soporte_monitor">Soporte para Monitor</option>
+        </optgroup>
+        <optgroup label="Redes">
+            <option value="router">Router</option>
+            <option value="switch">Switch de Red</option>
+            <option value="cable_ethernet">Cable Ethernet</option>
+            <option value="modem">Módem</option>
+            <option value="tarjeta_red">Tarjeta de Red</option>
+        </optgroup>
+        <optgroup label="Software y Otros">
+            <option value="sistema_operativo">Sistema Operativo</option>
+            <option value="antivirus">Antivirus</option>
+            <option value="office">Microsoft Office</option>
+            <option value="licencia">Licencias de Software</option>
+        </optgroup>
+    </select>
+    
+
+    </select>
+
+    </select>
+      </select>
+  </div>
+  
+ 
+  <div class="productos-container">
+    <div class="productos-grid" id="productosGrid">
+      <!-- Ejemplo de Producto 1 -->
+      <div class="producto-card" data-name="cable UB USB" data-brand="Todas las marcas" data-price="S/50">
+        <img src="../productos/ub usb.jpg" alt="Producto 1">
+        <div class="producto-info">
+          <h3>CABLE UB USB</h3>
+          <p>Hub Concentrador USB 3.0 de 4 Puertos - USB-C a 4x USB A - Alimentado por el Bus</p>
+          <p class="producto-precio">$43.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('CABLE UB USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('CABLE UB USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 2 -->
+      <div class="producto-card" data-name="Memorias USB" data-brand="Todas las marcas" data-price="149.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2770/1_1000.jpg?t=1738876676927" alt="Producto 2">
+        <div class="producto-info">
+          <h3>Kingston® Memorias USB</h3>
+          <p>Memoria USB 128GB USB 3.2 DataTraveler Exodia M red</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Memorias USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Memorias USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 3 -->
+      <div class="producto-card" data-name="Memorias USB" data-brand="Todas las marcas" data-price="599.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2769/1_1000.jpg?t=1738876675267" alt="Producto 3">
+        <div class="producto-info">
+          <h3>Kingston® Memorias USB</h3>
+          <p>Memoria USB 64GB USB 3.2 DataTraveler Exodia white</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Memorias USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Memorias USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 4 -->
+      <div class="producto-card" data-name="Memorias USB" data-brand="Todas las marcas" data-price="89.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2768/1_1000.jpg?t=1738876673411" alt="Producto 4">
+        <div class="producto-info">
+          <h3>Kingston® Memorias USB</h3>
+          <p>Memoria USB 128GB USB 3.2 DataTraveler Exodia onyx black</p>
+          <p class="producto-precio">S/ 59.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Memorias USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Memorias USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 5 -->
+      <div class="producto-card" data-name="Memorias USB" data-brand="Todas las marcas" data-price="199.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2767/1_1000.jpg?t=1738876671624" alt="Producto 5">
+        <div class="producto-info">
+          <h3>Kingston® Memorias USB</h3>
+          <p>Memoria USB 64GB USB 3.2 DataTraveler Exodia blue</p>
+          <p class="producto-precio">S/ 44.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Memorias USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Memorias USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 6 -->
+      <div class="producto-card" data-name="Memorias USB" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2112/1_1000.jpg?t=1729700416553" alt="Producto 6">
+        <div class="producto-info">
+          <h3>Usams® Memorias USB</h3>
+          <p>Memoria USB Rotable TypeC+USB3.0 64GB</p>
+          <p class="producto-precio">S/ 99.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Memorias USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Memorias USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 7 -->
+      <div class="producto-card" data-name="Hub USB" data-brand="Todas las marcas" data-price="899.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1904/1_1000.jpg?t=1729700023257" alt="Producto 7">
+        <div class="producto-info">
+          <h3>Spektra® Hub USB</h3>
+          <p>HUB USB 2.0 7 Puertos</p>
+          <p class="producto-precio">S/ 29.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Hub USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Hub USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 8 -->
+      <div class="producto-card" data-name="Hub USB" data-brand="Todas las marcas" data-price="79.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1674/1_1000.jpg?t=1735181732139" alt="Producto 8">
+        <div class="producto-info">
+          <h3>TPLink® Hub USB</h3>
+          <p>Hub 7 x SuperSpeed USB 3.0 (UH700)</p>
+          <p class="producto-precio">S/ 169.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Hub USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Hub USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 9 -->
+      <div class="producto-card" data-name="Hub USB" data-brand="Todas las marcas" data-price="249.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1673/1_1000.jpg?t=1729699622286" alt="Producto 9">
+        <div class="producto-info">
+          <h3>Klip® Hub USB</h3>
+          <p>Hub USB 2.0 de 4 puertos</p>
+          <p class="producto-precio">S/ 44.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Hub USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Hub USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+            <div class="producto-card" data-name="Memorias USB" data-brand="Todas las marcas" data-price="249.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1237/1_1000.jpg?t=1729698937697" alt="Producto 9">
+        <div class="producto-info">
+          <h3>Kingston® Memorias USB</h3>
+          <p>Memoria USB 128GB USB 3.2 DTKN</p>
+          <p class="producto-precio">S/ 89.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Memorias USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Memorias USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+            <div class="producto-card" data-name="Memorias USB" data-brand="Todas las marcas" data-price="249.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1235/1_1000.jpg?t=1729698935748" alt="Producto 9">
+        <div class="producto-info">
+          <h3>Kingston® Memorias USB</h3>
+          <p>Memoria USB 64GB USB 3.2 DTKN</p>
+          <p class="producto-precio">S/ 59.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Memorias USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Memorias USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+            <div class="producto-card" data-name="Hub USB" data-brand="Todas las marcas" data-price="249.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1221/1_1000.jpg?t=1729698910950" alt="Producto 9">
+        <div class="producto-info">
+          <h3>TPLink® Hub USB</h3>
+          <p>Hub de 4 Puertos USB 3.0 (UH400)</p>
+          <p class="producto-precio">S/ 69.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Hub USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Hub USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+                  <div class="producto-card" data-name="Memorias USB" data-brand="Todas las marcas" data-price="249.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1075/1_1000.jpg?t=1729698667470" alt="Producto 9">
+        <div class="producto-info">
+          <h3>Kingston® Memorias USB</h3>
+          <p>Memoria USB 128GB USB 3.2 DT70 Tipo-C</p>
+          <p class="producto-precio">S/ 59.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Memorias USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Memorias USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+                  <div class="producto-card" data-name="Memorias USB" data-brand="Todas las marcas" data-price="249.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1074/1_1000.jpg?t=1729698665856" alt="Producto 9">
+        <div class="producto-info">
+          <h3>Kingston® Memorias USB</h3>
+          <p>Memoria USB 128GB USB 3.2 DataTraveler Exodia</p>
+          <p class="producto-precio">S/ 54.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Memorias USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Memorias USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+                  <div class="producto-card" data-name="Hub USB" data-brand="Todas las marcas" data-price="249.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1221/1_1000.jpg?t=1729698910950" alt="Producto 9">
+        <div class="producto-info">
+          <h3>TPLink® Hub USB</h3>
+          <p>Hub de 4 Puertos USB 3.0 (UH400)</p>
+          <p class="producto-precio"></p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Hub USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Hub USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+                  <div class="producto-card" data-name="Memorias USB" data-brand="Todas las marcas" data-price="249.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1072/1_1000.jpg?t=1729698662439" alt="Producto 9">
+        <div class="producto-info">
+          <h3>Kingston® Memorias USB</h3>
+          <p>Memoria USB 64GB USB 3.2 DT70 Tipo-C</p>
+          <p class="producto-precio">S/ 29.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Memorias USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Memorias USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 10 -->
+      <div class="producto-card" data-name="alfombrilla" data-brand="Todas las marcas" data-price="179.99">
+        <img src="../productos/alfombria.jpg" alt="Producto 10">
+        <div class="producto-info">
+          <h3>ALFOMBRILLA</h3>
+          <p>Alfombrilla de ratón RGB de anime, almohadilla de teclado gruesa de gran tamaño</p>
+          <p class="producto-precio">$179.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Alfombrilla de ratón RGB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Alfombrilla de ratón RGB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 11 -->
+      <div class="producto-card" data-name="cable HDMI" data-brand="Todas las marcas" data-price="799.99">
+        <img src="../productos/cable_hdmi.jpg" alt="Producto 11">
+        <div class="producto-info">
+          <h3>CABLE HDMI</h3>
+          <p>Cable Hdmi 1.80 Mt. V.1.4a Full Hd 1080p</p>
+          <p class="producto-precio">$799.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('CABLE HDMI')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('CABLE HDMI', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 12 -->
+      <div class="producto-card" data-name="cable" data-brand="Todas las marcas" data-price="139.99">
+        <img src="../productos/cable_display.jpg" alt="Producto 12">
+        <div class="producto-info">
+          <h3>CABLE DisplayPort</h3>
+          <p>CABLE DisplayPort a DisplayPort 5mts KUMO 8k</p>
+          <p class="producto-precio">$139.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('CABLE DisplayPort')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('CABLE DisplayPort', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 13 -->
+      <div class="producto-card" data-name="adaptador WiFi" data-brand="Todas las marcas" data-price="109.99">
+        <img src="../productos/ADAPTADOR_USB.jpg" alt="Producto 13">
+        <div class="producto-info">
+          <h3>Adaptador WIFI</h3>
+          <p>Adaptador USB Inalambrico 300Mbps Nano WiFi 802.11b/g/n</p>
+          <p class="producto-precio">$109.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Adaptador WIFI')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Adaptador WIFI', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 14 -->
+      <div class="producto-card" data-name="controlador RGB" data-brand="Todas las marcas" data-price="159.99">
+        <img src="../productos/controlador RGB.jpg" alt="Producto 14">
+        <div class="producto-info">
+          <h3>CONTROLADOR RGB</h3>
+          <p>CONTROLADOR RGB ANTRYX SPECTRUM 6-canales</p>
+          <p class="producto-precio">$159.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('CONTROLADOR RGB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('CONTROLADOR RGB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 15 -->
+      <div class="producto-card" data-name="soporte monitor" data-brand="Todas las marcas" data-price="699.99">
+        <img src="../productos/soporte-monitor.jpg" alt="Producto 15">
+        <div class="producto-info">
+          <h3>SOPORTE MONITOR</h3>
+          <p>SOPORTE PARA MONITOR KLIP XTREME KPM-311 13a 32 pulgadas, soporta 2 monitores</p>
+          <p class="producto-precio">$699.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('SOPORTE MONITOR')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('SOPORTE MONITOR', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 16 -->
+      <div class="producto-card" data-name="Lámpara LED" data-brand="Todas las marcas" data-price="119.99">
+        <img src="../productos/Lámpara LED con USB para laptops.jpg" alt="Producto 16">
+        <div class="producto-info">
+          <h3>Lámpara LED con USB para laptops</h3>
+          <p>Lámpara de escritorio LED para oficina en casa, luz de escritorio para videollamada, 3 temperaturas de color, 
+            luz de computadora de 10 brillo, luz de escritorio LED regulable con función de memoria </p>
+          <p class="producto-precio">$119.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Lámpara LED con USB para laptops')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Lámpara LED con USB para laptops', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 17 -->
+      <div class="producto-card" data-name="base refrigerante" data-brand="Todas las marcas" data-price="89.99">
+        <img src="../productos/Base refrigerante para laptops.jpg" alt="Producto 17">
+        <div class="producto-info">
+          <h3>Base refrigerante para laptops</h3>
+          <p>llano V10 - Almohadilla de enfriamiento para laptop para videojuegos, soporte enfriador 
+            RGB para laptop con potente ventilador externo de refrigeración turbo de 4.72 pulgadas</p>
+          <p class="producto-precio">$89.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Base refrigerante para laptops')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Base refrigerante para laptops', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 18 -->
+      <div class="producto-card" data-name="Organizador" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://m.media-amazon.com/images/I/61-J1ripqLL._AC_SX466_PIbundle-2,TopRight,0,0_SH20_.jpg" alt="Producto 18">
+        <div class="producto-info">
+          <h3>Organizador de cables o canaletas adhesivas</h3>
+          <p>PAMO Organizador de cables debajo del escritorio para un fácil montaje debajo de la 
+            mesa I Juego de 2 – con 10 bridas para cables I Organizador de escritorio para oficina</p>
+          <p class="producto-precio">$129.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Organizador de cables')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Organizador de cables', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 19 -->
+      <div class="producto-card" data-name="protector" data-brand="Todas las marcas" data-price="499.99">
+        <img src="https://m.media-amazon.com/images/I/71cXfvRD9XL._AC_SX466_PIbundle-2,TopRight,0,0_SH20_.jpg" alt="Producto 19">
+        <div class="producto-info">
+          <h3>Protectores de pantalla para monitores o laptops</h3>
+          <p>[Paquete de 2] Pantalla de privacidad de computadora de 27 pulgadas para monitor de pantalla ancha de 16:9, 
+            filtro de luz azul antirreflejo, protección ocular extraíble, protector de privacidad de 27</p>
+          <p class="producto-precio">$499.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Protectores de pantalla para monitores o laptops')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Protectores de pantalla para monitores o laptops', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <!-- Ejemplo de Producto 1 -->
+      <div class="producto-card" data-name="cable" data-brand="Todas las marcas" data-price="99.99">
+        <img src="https://m.media-amazon.com/images/I/61Wt52cIABL._SX522_.jpg" alt="Producto 1">
+        <div class="producto-info">
+          <h3>Cables SATA y adaptadores SATA a USB</h3>
+          <p>Basesailor Adaptador USB para cable SATA con adaptador USB C a USB, USB A 3.0 a 2.5 pulgadas, lector de disco duro SATA-III 
+            para convertidor externo HDD/SSD, transferencia de datos para MacBook Pro</p>
+          <p class="producto-precio">$99.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Cables SATA y adaptadores SATA a USB')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Cables SATA y adaptadores SATA a USB', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 2 -->
+      <div class="producto-card" data-name="Pulsera" data-brand="Todas las marcas" data-price="149.99">
+        <img src="https://m.media-amazon.com/images/I/61x-BmLFIWL._AC_SX679_.jpg" alt="Producto 2">
+        <div class="producto-info">
+          <h3>Pulsera antiestática para mantenimiento técnico</h3>
+          <p>Pulsera antiestática, correa de muñeca antiestática, elimina la electricidad estática en invierno, correa de muñeca antiestática, mejora el sueño, 
+            elimina la correa de muñeca estática del cuerpo, tamaño ajustable, 3 unidades</p>
+          <p class="producto-precio">$149.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Pulsera antiestática')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Pulsera antiestática', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 3 -->
+      <div class="producto-card" data-name="soporte" data-brand="Todas las marcas" data-price="599.99">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_2X_722609-MPE74463316336_022024-F-soporte-de-brazo-para-escritorio-ideal-para-teclado-y-mouse.webp" alt="Producto 3">
+        <div class="producto-info">
+          <h3>soporte para cable de mouse gamer</h3>
+          <p>Soporte De Brazo Para Escritorio, Ideal Para Teclado Y Mouse</p>
+          <p class="producto-precio">$599.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Soporte De Brazo Para Escritorio')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Soporte De Brazo Para Escritorio', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 4 -->
+      <div class="producto-card" data-name="Switch de red" data-brand="Todas las marcas" data-price="89.99">
+        <img src="https://m.media-amazon.com/images/I/81n6vy5IoEL._AC_SX679_.jpg" alt="Producto 4">
+        <div class="producto-info">
+          <h3>Switch de red Ethernet (4, 8 o más puertos)</h3>
+          <p>TP-Link LS108G - Switch 8 Puertos (10/100/1000) Switch Ethernet Gigabit, Carcasa metálica, Ultraligero con 
+            Super disipación de calor, Ahorro de Energía, Silencioso, Sin configuración</p>
+          <p class="producto-precio">$89.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Switch de red Ethernet')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Switch de red Ethernet', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 5 -->
+      <div class="producto-card" data-name="CAMARA" data-brand="Todas las marcas" data-price="199.99">
+        <img src="https://m.media-amazon.com/images/I/61Wwr2XCyML._AC_SY450_.jpg" alt="Producto 5">
+        <div class="producto-info">
+          <h3>Cámara web HD con micrófono para videollamadas</h3>
+          <p>OYU Cámara Web, Webcam Full HD 1080p Video, Dual Micrófono Estéreo, Video Cámara de Ordenador Enchufable con USB, 
+            para Videollamadas, Videojuegos, grabación, conferencias, Estudio, Skype</p>
+          <p class="producto-precio">$199.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Cámara web HD')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Cámara web HD', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 6 -->
+      <div class="producto-card" data-name="DISCO" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3081/1_1000.jpg?t=1743463383713" alt="Producto 6">
+        <div class="producto-info">
+          <h3>Kingston® Discos SSD</h3>
+          <p>Unidad SSD Kingston NV3 500Gb PCIe Gen4 M.2 Para PC y laptop</p>
+          <p class="producto-precio">239.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Kingston® Discos SSD')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Kingston® Discos SSD', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 7 -->
+      <div class="producto-card" data-name="DISCO" data-brand="Todas las marcas" data-price="899.99">
+        <img src="http://pcfactory.com.pe/public/foto/1095/1_1000.jpg?t=1743387174398" alt="Producto 7">
+        <div class="producto-info">
+          <h3>Kingston® Discos SSD</h3>
+          <p>Unidad SSD Kingston A400 480Gb Sata3 2.5" Para PC y laptop</p>
+          <p class="producto-precio">139.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Kingston® Discos SSD')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Kingston® Discos SSD', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 8 -->
+      <div class="producto-card" data-name="CABLE" data-brand="Todas las marcas" data-price="79.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1973/1_1000.jpg?t=1729700128582" alt="Producto 8">
+        <div class="producto-info">
+          <h3>CABLE SATA</h3>
+          <p>Cable Datos SATA 90º a SATA 0.4m Rojo</p>
+          <p class="producto-precio">$79.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('CABLE SATA')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('CABLE SATA', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 9 -->
+      <div class="producto-card" data-name="REFRIGERACION" data-brand="Todas las marcas" data-price="249.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3499/1_1000.jpg?t=1740077537270" alt="Producto 9">
+        <div class="producto-info">
+          <h3>Refrigeración CPU</h3>
+          <p>DISIPADOR CPU, MOD. AG400 DIGITAL PLUS</p>
+          <p class="producto-precio">219.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Refrigeración CPU')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Refrigeración CPU', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 10 -->
+      <div class="producto-card" data-name="CONECTORES" data-brand="Todas las marcas" data-price="179.99">
+        <img src="https://m.media-amazon.com/images/I/61E6Lsl0H3L._AC_SX466_.jpg" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Conectores RJ45 y herramientas para crimpar</h3>
+          <p>Rj45 - Kit de herramientas de crimpado Ethernet para conectores 8P Cat5 Cat6 Pass Through Connectors Herramienta de 
+            crimpado de red RJ45 con 50 cubiertas y 50 conectores Mini pelacables amarillo</p>
+          <p class="producto-precio">$179.99</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Conectores RJ45')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Conectores RJ45', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1471/2_1000.jpg?t=1684355065501" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Epson® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta Epson L200/L350/L210/L355 Amarillo</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1470/1_1000.jpg?t=1729699295731" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Epson® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta Epson L200/L350/L210/L355 Magenta</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1469/1_1000.jpg?t=1729699293695" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Epson® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta Epson L200/L350/L210/L355 Cyan</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1467/1_1000.jpg?t=1729699289618" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Epson® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta Epson L3110 Amarillo</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1468/1_1000.jpg?t=1729699291654" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Epson® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta Epson L200/L350/L210/L355 Negro</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1466/1_1000.jpg?t=1729699287654" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Epson® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta Epson L3110 Magenta</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1465/1_1000.jpg?t=1729699285710" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Epson® Cartuchos de Tinta y Botellas para Impresoas</h3>
+          <p>Botella de tinta Epson L3110 Cyan</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Cartuchos de Tinta y Botellas para Impresoas')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Cartuchos de Tinta y Botellas para Impresoas', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1464/1_1000.jpg?t=1729699283720" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Epson® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta Epson L3110 Negro</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1463/1_1000.jpg?t=1729699281717" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Epson® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta Epson L4150/L4160 Amarillo</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1462/1_1000.jpg?t=1729699279788" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Epson® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta Epson L4150/L4160 Magenta</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1461/1_1000.jpg?t=1729699277782" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Epson® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta Epson L4150/L4160 Cyan</p>
+          <p class="producto-precio">S/ 39.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1460/1_1000.jpg?t=1729699275652" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Epson® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta Epson L4150/L4160 Negro</p>
+          <p class="producto-precio">S/ 44.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Hp" data-brand="HP" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1020/1_1000.jpg?t=1729698554333" alt="Producto 10">
+        <div class="producto-info">
+          <h3>HP® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta original HP GT52 Amarillo</p>
+          <p class="producto-precio">S/ 59.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('HP® Cartuchos de Tinta y Botellas para Impresora')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('HP® Cartuchos de Tinta y Botellas para Impresora', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="HP" data-brand="HP" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1019/1_1000.jpg?t=1729698552400" alt="Producto 10">
+        <div class="producto-info">
+          <h3>HP® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta original HP GT52 Magenta</p>
+          <p class="producto-precio">S/ 59.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('HP® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('HP® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="HP" data-brand="HP" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1018/1_1000.jpg?t=1729698550447" alt="Producto 10">
+        <div class="producto-info">
+          <h3>HP® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta original HP GT52 Cyan</p>
+          <p class="producto-precio">S/ 59.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('HP® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('HP® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="HP" data-brand="HP" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1017/1_1000.jpg?t=1729698548426" alt="Producto 10">
+        <div class="producto-info">
+          <h3>HP® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>Botella de tinta original HP GT53 Negro</p>
+          <p class="producto-precio">S/ 59.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('HP® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('HP® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Canon" data-brand="Canon" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3488/1_1000.jpg?t=1740630858193" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Canon® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>TINTA CANON GI-11Y YELLOW</p>
+          <p class="producto-precio">S/ 49.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Canon® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Canon® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+            <div class="producto-card" data-name="Canon" data-brand="Canon" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3487/1_1000.jpg?t=1740631748733" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Canon® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>TINTA CANON GI-11M MAGENTA</p>
+          <p class="producto-precio">S/ 49.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Canon® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Canon® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+                  <div class="producto-card" data-name="Canon" data-brand="Canon" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3486/1_1000.jpg?t=1740631428483" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Canon® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>TINTA CANON GI-11C CIAN</p>
+          <p class="producto-precio">S/ 49.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Canon® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Canon® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+                  <div class="producto-card" data-name="Canon" data-brand="Canon" data-price="179.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3485/1_1000.jpg?t=1740630377588" alt="Producto 10">
+        <div class="producto-info">
+          <h3>Canon® Cartuchos de Tinta y Botellas para Impresoras</h3>
+          <p>TINTA CANON GI-11 PGBK BLACK</p>
+          <p class="producto-precio">S/ 51.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Canon® Cartuchos de Tinta y Botellas para Impresoras')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Canon® Cartuchos de Tinta y Botellas para Impresoras', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 11 -->
+      <div class="producto-card" data-name="LECTOR" data-brand="Todas las marcas" data-price="799.99">
+        <img src="https://m.media-amazon.com/images/I/71hD3gkMRqL._AC_SX466_.jpg" alt="Producto 11">
+        <div class="producto-info">
+          <h3>Lector multi-tarjetas 3 en 1 o 7 en 1</h3>
+          <p>UGREEN SD lector de tarjetas USB 3.0; adaptador Hub 5Gbps; lee 4 tarjetas simultáneamente; CF, CFI, TF, SDXC, 
+            SDHC, SD, MMC, Micro SDXC, Micro SD, Micro SDHC, MS, UHS-I para Windows, Mac, Linux</p>
+          <p class="producto-precio">36.63</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('UGREEN SD lector de tarjetas USB 3.0')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('UGREEN SD lector de tarjetas USB 3.0', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 12 -->
+      <div class="producto-card" data-name="DISCO" data-brand="Todas las marcas" data-price="139.99">
+        <img src="https://m.media-amazon.com/images/I/61lwE7jT-sL._AC_SL1500_.jpg" alt="Producto 12">
+        <div class="producto-info">
+          <h3>Duplicador de discos duros (clonador HDD a SSD)</h3>
+          <p>FIDECO M.2 NVMe SATA SSD Cloner Dock, USB 3.2 Gen 2 X 2, Carcasa SSD SATA NVMe dual de 20 Gbps, clonador 
+            duplicador M.2, compatible con clon sin conexión, UASP y Trim, diseño de aluminio</p>
+          <p class="producto-precio">250.74</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Duplicador de discos duros')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Duplicador de discos duros', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 13 -->
+      <div class="producto-card" data-name="ASUS" data-brand="Asus" data-price="109.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3671/1_1000.jpg?t=1743611323625" alt="Producto 13">
+        <div class="producto-info">
+          <h3>Asus®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer Asus TUF F15 15.6" FHD Intel Core i7-12700H 16GB 
+            1TB SSD NVIDIA GeForce RTX 3050 4GB W11 Mecha Gray (FX507ZC4-HN151W)</p>
+          <p class="producto-precio">4,249.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer Asus TUF F15')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer Asus TUF F15', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 14 -->
+      <div class="producto-card" data-name="MSI" data-brand="MSI" data-price="159.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3629/1_1000.jpg?t=1745596757146" alt="Producto 14">
+        <div class="producto-info">
+          <h3>MSI®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer MSI Vector 16 HX AI 16" FHD+ 144Hz Intel Core Ultra 7 255HX 16GB 512GB NVIDIA GeForce RTX 5070 Ti 12GB W11</p>
+          <p class="producto-precio">9,599.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer MSI Vector')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer MSI Vector', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 15 -->
+      <div class="producto-card" data-name="MSI" data-brand="MSI" data-price="699.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3627/1_1000.jpg?t=1742860968353" alt="MSI">
+        <div class="producto-info">
+          <h3>MSI®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer MSI Katana 17 B13VFK 17.3" FHD 144Hz Intel Core i7-13620H 16GB 512GB SSD NVIDIA Geforce RTX 4060 8GB + Mochila</p>
+          <p class="producto-precio">5,699.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer MSI Katana')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer MSI Katana', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 16 -->
+      <div class="producto-card" data-name="Acer" data-brand="Acer" data-price="119.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3616/1_1000.jpg?t=1744605741490" alt="Acer">
+        <div class="producto-info">
+          <h3>Acer®
+            Laptops Tradicionales</h3>
+          <p>Laptop Acer Aspire Lite 16" FHD+ IPS Intel Core i7-1255U 16GB 512GB SSD W11 (AL16-51P-7984)</p>
+          <p class="producto-precio">2,959.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Acer Aspire')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Acer Aspire', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 17 -->
+      <div class="producto-card" data-name="Acer" data-brand="Acer" data-price="89.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3490/1_1000.jpg?t=1744605671509" alt="Acer">
+        <div class="producto-info">
+          <h3>Acer®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer Acer Nitro V 15.6" FHD 165Hz Intel Core i7-13620H 16GB 512GB SSD NVIDIA GeForce RTX3050 Windows 11 (ANV15-51-71H8)</p>
+          <p class="producto-precio">4,699.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer Acer Nitro')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer Acer Nitro', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="producto-card" data-name="Lenovo" data-brand="Lenovo" data-price="119.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3449/1_1000.jpg?t=1743388184457" alt="Producto 18">
+        <div class="producto-info">
+          <h3>Lenovo®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer Lenovo Legion Pro 5 16IRX9 16" QHD+ 165Hz Intel Core i9-14900HX 16GB 1TB SSD NVIDIA GeForce RTX 4060 8GB W11</p>
+          <p class="producto-precio">S/ 7,279.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer Lenovo Legion Pro 5')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer Lenovo Legion Pro 5', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="producto-card" data-name="Lenovo" data-brand="Lenovo" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3447/1_1000.jpg?t=1743388179740" alt="Producto 19">
+        <div class="producto-info">
+          <h3>Lenovo®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer Lenovo LOQ 15IRX9 15.6" FHD 144Hz Intel Core i7-13650HX 24GB 512GB SSD NVIDIA GeForce RTX 4050 6GB W11</p>
+          <p class="producto-precio">S/ 4,979.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer Lenovo LOQ')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer Lenovo LOQ', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="HP" data-brand="HP" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3390/1_1000.jpg?t=1743388124806" alt="Producto 20">
+        <div class="producto-info">
+          <h3>HP®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer HP OMEN 17.3" FHD AMD Ryzen 7 8845HS 16GB 1TB SSD NVIDIA GeForce RTX4050 6GB Windows 11 Negro Sombra (17-db0006la)</p>
+          <p class="producto-precio">S/ 5,699.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer HP OMEN')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer HP OMEN', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="HP" data-brand="HP" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3389/1_1000.jpg?t=1743388122731" alt="Producto 21">
+        <div class="producto-info">
+          <h3>HP®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer HP Victus 15.6" FHD Intel Core i5-12450H 8GB 512GB SSD NVIDIA GeForce RTX3050 4GB W11 Azul (15-fa0021la)</p>
+          <p class="producto-precio">S/ 2,949.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer HP Victus')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer HP Victus', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="HP" data-brand="HP" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3387/1_1000.jpg?t=1744605582606" alt="Producto 22">
+        <div class="producto-info">
+          <h3>HP®
+            Laptops Tradicionales</h3>
+          <p>Laptop HP 15.6" HD AMD Ryzen 5 5500U 8GB 512GB SSD Windows 11 Plateado (15-ef2507la)</p>
+          <p class="producto-precio">S/ 1,649.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop HP')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop HP', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="HP" data-brand="HP" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3388/1_1000.jpg?t=1744605584523" alt="Producto 23">
+        <div class="producto-info">
+          <h3>HP®
+            Laptops Tradicionales</h3>
+          <p>Laptop HP 15.6" FHD AMD Ryzen 7-7730U 8GB 512GB SSD Windows 11 Azul (15-fc0011la)</p>
+          <p class="producto-precio">S/ 2,199.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop HP')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop HP', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="HP" data-brand="HP" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3270/1_1000.jpg?t=1742785383328" alt="Producto 24">
+        <div class="producto-info">
+          <h3>HP®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer HP OMEN Transcend 14" OLED 120Hz Intel Core Ultra 7-155H 16GB 
+            1TB SSD NVIDIA GeForce RTX4060 Windows 11 Shadow Black (14-fb0001la)</p>
+          <p class="producto-precio">S/ 7,949.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer HP OMEN Transcend')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer HP OMEN Transcend', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="HP" data-brand="HP" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3268/1_1000.jpg?t=1743388094823" alt="Producto 25">
+        <div class="producto-info">
+          <h3>HP®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer HP Victus 15.6" FHD 144Hz AMD Ryzen 5-8645HS 8GB 
+            512GB SSD NVIDIA GeForce RTX3050 Windows 11 Mica Silver (15-fb2002la)</p>
+          <p class="producto-precio">S/ 3,199.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer HP Victus')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer HP Victus', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="HP" data-brand="HP" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3060/1_1000.jpg?t=1744605455477" alt="Producto 26">
+        <div class="producto-info">
+          <h3>HP®
+            Laptops Tradicionales</h3>
+          <p>Laptop HP 15.6 FHD NT Ryzen 5-7520U 8GB 512GB Windows 11 (15-FC0071LA)</p>
+          <p class="producto-precio">S/ 1,799.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop HP')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop HP', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="HP" data-brand="HP" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3059/1_1000.jpg?t=1744605453386" alt="Producto 27">
+        <div class="producto-info">
+          <h3>HP®
+            Laptops Tradicionales</h3>
+          <p>Laptop HP 15.6" HD Intel Core i5-1235U 8GB 512GB SSD W11 (15-FD0048LA)</p>
+          <p class="producto-precio">S/ 2,099.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop HP')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop HP', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="HP" data-brand="HP" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2998/1_1000.jpg?t=1744605401364" alt="Producto 28">
+        <div class="producto-info">
+          <h3>HP®
+            Laptops Tradicionales</h3>
+          <p>Laptop HP Envy x360 15.6" AMD Ryzen 7 7730U 16GB 1TB Windows 11</p>
+          <p class="producto-precio">S/ 5,149.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop HP Envy')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop HP Envy', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="HP" data-brand="HP" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2793/1_1000.jpg?t=1744605289011" alt="Producto 29">
+        <div class="producto-info">
+          <h3>HP®
+            Laptops Tradicionales</h3>
+          <p>Laptop HP ProBook 455 G10 AMD Ryzen 7-7730U 32GB 1TB SSD Windows 11 Pro (9F4F5LT)</p>
+          <p class="producto-precio">S/ 4,099.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop HP ProBook')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop HP ProBook', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="HP" data-brand="HP" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2656/1_1000.jpg?t=1742784946360" alt="Producto 30">
+        <div class="producto-info">
+          <h3>HP®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer HP Victus 15.6" FHD Intel Core i7-12650H 16GB 512GB SSD NVIDIA RTX3050 4GB Windows 11 (15-fa0007la)</p>
+          <p class="producto-precio">S/ 4,449.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer HP Victus')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer HP Victus', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="HP" data-brand="HP" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2655/1_1000.jpg?t=1744605225423" alt="Producto 31">
+        <div class="producto-info">
+          <h3>HP®
+            Laptops Tradicionales</h3>
+          <p>Laptop HP 15.6" FHD Intel Core i7-1355U 8GB 512GB SSD Windows 11 (15-fd0008la)</p>
+          <p class="producto-precio">S/ 3,049.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop HP')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop HP', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Acer" data-brand="Acer data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3164/1_1000.jpg?t=1744605536513" alt="Producto 32">
+        <div class="producto-info">
+          <h3>Acer®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer Acer Predator Helios Neo 16" 165 Hz Intel Core i7-13650HX 16GB 1TB SSD NVIDIA GeForce RTX4060 Windows 11</p>
+          <p class="producto-precio">S/ 6,899.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer Acer Predator')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer Acer Predator', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Acer" data-brand="Acer" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3163/1_1000.jpg?t=1744605534458" alt="Producto 33">
+        <div class="producto-info">
+          <h3>Acer®
+            Laptops Tradicionales</h3>
+          <p>Laptop Acer Aspire 5 15.6" FHD Intel Core i9-13900H 16GB 512GB SSD Windows 11</p>
+          <p class="producto-precio">S/ 3,499.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Acer Aspire 5')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Acer Aspire 5', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Acer" data-brand="Acer" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3162/1_1000.jpg?t=1744605532403" alt="Producto 34">
+        <div class="producto-info">
+          <h3>Acer®
+            Laptops Tradicionales</h3>
+          <p>Laptop Acer Aspire 3 15.6" FHD Intel Core i5-1235U 16GB 512GB SSD Windows 11</p>
+          <p class="producto-precio">S/ 2,499.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Acer Aspire 3')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Acer Aspire 3', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Acer" data-brand="Acer" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2969/1_1000.jpg?t=1744605378828" alt="Producto 35">
+        <div class="producto-info">
+          <h3>Acer®
+            Laptops Tradicionales</h3>
+          <p>Laptop Acer Aspire 5 15.6" FHD Intel Core 7 150U 16GB 1TB SSD W11 (A15-51M-70N4)</p>
+          <p class="producto-precio">S/ 3,249.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Acer Aspire')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Acer Aspire', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Lenovo" data-brand="Lenovo" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3454/2_1000.jpg?t=1738092505334" alt="Producto 36">
+        <div class="producto-info">
+          <h3>Lenovo® Tablets</h3>
+          <p>Tablet Lenovo M11 11" 4GB 128GB WiFi</p>
+          <p class="producto-precio">S/ 699.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Tablet Lenovo M11')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Tablet Lenovo M11', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Lenovo" data-brand="Lenovo" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3453/2_1000.jpg?t=1738091716060" alt="Producto 37">
+        <div class="producto-info">
+          <h3>Lenovo®
+            Laptops Gamer</h3>
+          <p>Laptop Gamer Lenovo Legion Pro 7 16IRX9H 16" QHD+ 240Hz Intel Core i9-14900HX 32GB 1TB SSD NVIDIA GeForce RTX 4080 12GB W11</p>
+          <p class="producto-precio">S/ 11,899.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Gamer Lenovo Legion Pro 7')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Gamer Lenovo Legion Pro 7', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Lenovo" data-brand="Lenovo" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3442/1_1000.jpg?t=1744605620405" alt="Producto 38">
+        <div class="producto-info">
+          <h3>Lenovo® Laptops Tradicionales</h3>
+          <p>Laptop Lenovo IdeaPad 1 15ALC7 15.6" FHD AMD Ryzen 7 5700U 16GB 1TB SSD W11 (82R400BELM)</p>
+          <p class="producto-precio">S/ 2,399.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Laptop Lenovo IdeaPad')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Laptop Lenovo IdeaPad', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Lenovo" data-brand="Lenovo" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2811/2_1000.jpg?t=1713538356477" alt="Producto 39">
+        <div class="producto-info">
+          <h3>Lenovo® All-in-One</h3>
+          <p>All in One Lenovo IdeaCentre AIO 3 23.8" FHD Intel Core i3-1215U 8GB 512GB SSD Windows 11 (F0GH0102LD)</p>
+          <p class="producto-precio">S/ 2,699.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Lenovo® All-in-One')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Lenovo® All-in-One', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Lenovo" data-brand="Lenovo" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2570/3_1000.jpg?t=1730143897885" alt="Producto 40">
+        <div class="producto-info">
+          <h3>Lenovo® All-in-One</h3>
+          <p>All In One 23.8" FHD Intel Core i5-12450H 8GB 512GB SSD Windows 11 Negro</p>
+          <p class="producto-precio">S/ 2,399.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Lenovo® All-in-One')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Lenovo® All-in-One', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name=Lenovo" data-brand="Lenovo" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2500/2_1000.jpg?t=1730143790669" alt="Producto 41">
+        <div class="producto-info">
+          <h3>Lenovo® Tablets</h3>
+          <p>Tablet Lenovo P12 12" 8GB 256GB WiFi Storm Grey</p>
+          <p class="producto-precio">S/ 1,699.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Lenovo® Tablets')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Lenovo® Tablets', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="samsung" data-brand="samsung" data-price="129.99">
+        <img src="https://images.samsung.com/is/image/samsung/p6pim/cl/ls27bg400elxzs/gallery/cl-odyssey-g4-27g40b-ls27bg400elxzs-533924836?$684_547_JPG$" alt="Producto 42">
+        <div class="producto-info">
+          <h3>Samsung®
+            Monitores</h3>
+          <p>Monitor Gaming 27" LED IPS 240HZ DP HDMI Plano</p>
+          <p class="producto-precio">S/ 1,189.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('samsung monitores')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('samsung monitores', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="samsung" data-brand="samsung" data-price="129.99">
+        <img src="https://images.samsung.com/is/image/samsung/p6pim/pe/ls32dg700elxpe/gallery/pe-odyssey-g7-g70d-545245-ls32dg700elxpe-545979113?$684_547_PNG$" alt="Producto 43">
+        <div class="producto-info">
+          <h3>samsung monitores</h3>
+          <p>Monitor Gaming Odyssey G7 de 32"</p>
+          <p class="producto-precio">2,399.00</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('samsung monitores')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('samsung monitores', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="samsung" data-brand="samsung" data-price="129.99">
+        <img src="https://images.samsung.com/is/image/samsung/p6pim/pe/ls49fg910enxza/gallery/pe-odyssey-g9-g91f-ls49fg910enxza-545889846?$684_547_PNG$" alt="Producto 44">
+        <div class="producto-info">
+          <h3>samsung monitores</h3>
+          <p>49" Odyssey G9 G91F DQHD 144Hz Gaming Monitor</p>
+          <p class="producto-precio">3,645.46</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('samsung monitores')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('samsung monitores', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="samsung" data-brand="samsung" data-price="129.99">
+        <img src="https://images.samsung.com/is/image/samsung/p6pim/pe/ls24d600ealxpe/gallery/pe-viewfinity-s6-24s60d--27s60d-32s60d-ls24d600ealxpe-542427885?$684_547_PNG$" alt="Producto 45">
+        <div class="producto-info">
+          <h3>samsung monitores</h3>
+          <p>Monitor ViewFinity S6 QHD de 24"</p>
+          <p class="producto-precio">949.00</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('samsung monitores')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('samsung monitores', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="samsung" data-brand="samsung" data-price="129.99">
+        <img src="https://images.samsung.com/is/image/samsung/p6pim/pe/ls27dg612slxpe/gallery/pe-odyssey-oled-g6-g61sd-ls27dg612slxpe-544448224?$684_547_PNG$" alt="Producto 46">
+        <div class="producto-info">
+          <h3>samsung monitores"</h3>
+          <p>Monitor Gaming Oddyssey G6 de 27"</p>
+          <p class="producto-precio">s/ 2,999.00</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('samsung monitores')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('samsung monitores', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="monitores" data-brand="samsung" data-price="129.99">
+        <img src="https://images.samsung.com/is/image/samsung/p6pim/pe/ls27dg600slxpe/gallery/pe-odyssey-oled-g6-g60sd-ls27dg600slxpe-542046483?$684_547_PNG$" alt="Producto 47">
+        <div class="producto-info">
+          <h3>samsung monitores</h3>
+          <p>Monitor Gaming Odyssey OLED G6 de 27''</p>
+          <p class="producto-precio">s/ 3,699.00</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('samsung monitores')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('samsung monitores', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="samsung" data-brand="samsung" data-price="129.99">
+        <img src="https://images.samsung.com/is/image/samsung/p6pim/pe/ls27dg300elxpe/gallery/pe-odyssey-g3-g30d-ls27dg300elxpe-543239725?$684_547_PNG$" alt="Producto 48">
+        <div class="producto-info">
+          <h3>samsung monitores</h3>
+          <p>Monitor Gaming Odyssey G3 de 27"</p>
+          <p class="producto-precio">s/ 809.00</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('samsung monitores')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('samsung monitores', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="monitor" data-brand="samsung" data-price="129.99">
+        <img src="https://images.samsung.com/is/image/samsung/p6pim/pe/ls24d360galxpe/gallery/pe-essential-s3-s36gd-r-ls24d360galxpe-545888962?$684_547_PNG$" alt="Producto 49">
+        <div class="producto-info">
+          <h3>samsung monitores</h3>
+          <p>Monitor Curvo FHD de 24" VA</p>
+          <p class="producto-precio">s/ 499.00</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('samsung monitores')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('samsung monitores', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="samsung" data-brand="samsung data-price="129.99">
+        <img src="https://images.samsung.com/is/image/samsung/p6pim/pe/ls22d400galxpe/gallery/pe-essential-s4-s40gd-ls22d400galxpe-544448567?$684_547_PNG$" alt="Producto 50">
+        <div class="producto-info">
+          <h3>samsung monitores</h3>
+          <p>Monitor Plano FHD de 22'' IPS</p>
+          <p class="producto-precio">s/ 449.00</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('samsung monitores')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('samsung monitores', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="samsung" data-brand="samsung" data-price="129.99">
+        <img src="https://images.samsung.com/is/image/samsung/p6pim/pe/ls34c500galxpe/gallery/pe-s5-s50gc-ls34c500galxpe-537422626?$684_547_PNG$" alt="Producto 51">
+        <div class="producto-info">
+          <h3>samsung monitores</h3>
+          <p>ViewFinity S5 Ultrawide de 34". UWQHD. 100Hz. HDR</p>
+          <p class="producto-precio">s/ 1,099.00</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('samsung Monitores')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('samsung Monitores', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1022/1_1000.jpg?t=1744604817347" alt="Producto 52">
+        <div class="producto-info">
+          <h3>Epson® Multifuncionales Tinta</h3>
+          <p>Impresora Multifuncional Tinta EcoTank L3250</p>
+          <p class="producto-precio">S/ 1,099.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Multifuncionales Tinta')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Multifuncionales Tinta', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1472/1_1000.jpg?t=1744604931844" alt="Producto 53">
+        <div class="producto-info">
+          <h3>Epson® Multifuncionales Tinta</h3>
+          <p>Impresora Multifuncional Tinta EcoTank L5590</p>
+          <p class="producto-precio">S/ 1,299.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson® Multifuncionales Tinta')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson® Multifuncionales Tinta', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="129.99">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_2X_898975-MPE81860851092_012025-F-impresora-epson-multifuncion-4-en-1-ecotank-l14150-wi-fi-a3.webp" alt="Producto 54">
+        <div class="producto-info">
+          <h3>Ecotank L14150</h3>
+          <p>Impresora Epson Multifunción 4 En 1 Ecotank L14150 Wi-fi A3</p>
+          <p class="producto-precio">S/ 2.749</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Ecotank L14150')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Ecotank L14150', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="129.99">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_2X_756952-MLU70783589272_082023-F.webp" alt="Producto 55">
+        <div class="producto-info">
+          <h3>Epson WorkForce WF-C5810</h3>
+          <p>Impresora multifunción a color Epson WorkForce WF-C5810 con wifi 220V</p>
+          <p class="producto-precio">S/ 2.159</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson WorkForce WF-C5810')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson WorkForce WF-C5810', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="129.99">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_2X_900140-MLA83269476873_032025-F.webp" alt="Producto 56">
+        <div class="producto-info">
+          <h3>Epson Ecotank L8160</h3>
+          <p>Impresora A Color Multifunción Epson Ecotank L8160 Wifi Color Blanco/Negro</p>
+          <p class="producto-precio">S/ 2.149</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson Ecotank L8160')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson Ecotank L8160', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="129.99">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_2X_998680-MLU78196954803_082024-F.webp" alt="Producto 57">
+        <div class="producto-info">
+          <h3>Ecotank L6270</h3>
+          <p>Impresora Epson Multifuncional 3 En 1 Ecotank L6270 Wi-fi</p>
+          <p class="producto-precio">S/ 1.539</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Ecotank L6270')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Ecotank L6270', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="129.99">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_2X_814142-MLA40375708553_012020-F.webp" alt="Producto 58">
+        <div class="producto-info">
+          <h3>EcoTank M1120</h3>
+          <p>Impresora simple función monocromática Epson EcoTank M1120 con wifi 220V</p>
+          <p class="producto-precio">S/ 849</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('EcoTank M1120')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('EcoTank M1120', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="129.99">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_2X_870546-MLA83580495563_042025-F.webp" alt="Producto 59">
+        <div class="producto-info">
+          <h3>Epson L8050</h3>
+          <p>Impresora Fotografica Epson L8050 Foto A4 Cd, Dvd, Pvc Color Negro</p>
+          <p class="producto-precio">S/ 1.599</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson L8050')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson L8050', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Epson" data-brand="Epson" data-price="129.99">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_2X_857879-MLU78109293806_082024-F.webp" alt="Producto 60">
+        <div class="producto-info">
+          <h3>Epson L8180</h3>
+          <p>Impresora Epson L8180 A3 Multifuncional 6 Tintas Fotográfic Color Negro</p>
+          <p class="producto-precio">S/ 4.114</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Epson L8180')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Epson L8180', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Hp" data-brand="HP" data-price="129.99">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_2X_930402-MLA82203657664_022025-F.webp" alt="Producto 61">
+        <div class="producto-info">
+          <h3>Hp Deskjet Ink Advantage</h3>
+          <p>Impresora Multifuncional Hp Deskjet Ink Advantage Ia 2874 Color Negro</p>
+          <p class="producto-precio">S/ 279</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Hp Deskjet Ink Advantage')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Hp Deskjet Ink Advantage', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3631/1_1000.jpg?t=1743452434856" alt="Producto 62">
+        <div class="producto-info">
+          <h3>Logitech® Mouses</h3>
+          <p>Mouse inalámbrico BT Logitech M196 Rosado</p>
+          <p class="producto-precio">S/ 54.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3630/1_1000.jpg?t=1743452800537" alt="Producto 63">
+        <div class="producto-info">
+          <h3>Logitech® Mouses</h3>
+          <p>Mouse inalambrico BT Logitech M196 Negro</p>
+          <p class="producto-precio">S/ 54.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="MousePads" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3431/1_1000.jpg?t=1739403025460" alt="Producto 64">
+        <div class="producto-info">
+          <h3>Kuzler® MousePads</h3>
+          <p>Mousepad ergonómico con almohadilla gel</p>
+          <p class="producto-precio">S/ 26.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('MousePads')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('MousePads', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="MousePads" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3336/1_1000.jpg?t=1745050044879" alt="Producto 65">
+        <div class="producto-info">
+          <h3>Argom® MousePads</h3>
+          <p>Mousepad Gamer Combat XXL 34.5x79.5cm Color Negro</p>
+          <p class="producto-precio">S/ 59.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('MousePads')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('MousePads', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3204/1_1000.jpg?t=1730391635329" alt="Producto 66">
+        <div class="producto-info">
+          <h3>Logitech® Mouses</h3>
+          <p>Mouse Inalámbrico Logitech M185 Rojo</p>
+          <p class="producto-precio">S/ 59.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3203/1_1000.jpg?t=1730391516340" alt="Producto 67">
+        <div class="producto-info">
+          <h3>Logitech® Mouses</h3>
+          <p>Mouse Logitech inalámbrico M185 Azul</p>
+          <p class="producto-precio">S/ 59.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouse')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouse', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3202/1_1000.jpg?t=1730390910958" alt="Producto 68">
+        <div class="producto-info">
+          <h3>Logitech® Mouses</h3>
+          <p>Mouse Logitech inalámbrico M185 Gris</p>
+          <p class="producto-precio">S/ 59.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3180/1_1000.jpg?t=1731362650196" alt="Producto 69">
+        <div class="producto-info">
+          <h3>XTech® MousePads</h3>
+          <p>Mouse Pad Negro - Xtech tamaño S</p>
+          <p class="producto-precio">S/ 9.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="MousePads" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3178/1_1000.jpg?t=1731374844361" alt="Producto 70">
+        <div class="producto-info">
+          <h3>CoolerMaster® MousePads</h3>
+          <p>Mousepad MP511/CORDURA/XXL Size</p>
+          <p class="producto-precio">S/ 169.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('MousePads')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('MousePads', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3173/1_1000.jpg?t=1731364408542" alt="Producto 71">
+        <div class="producto-info">
+          <h3>Klip® Mouses</h3>
+          <p>Mouse ergonómico inalambrico USB 2.4Ghz y Bluetooth blanco modelo KMB-501BK</p>
+          <p class="producto-precio">S/ 59.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3171/1_1000.jpg?t=1731363867384" alt="Producto 72">
+        <div class="producto-info">
+          <h3>Klip® Mouses</h3>
+          <p>Mouse óptico modelo Furtive compatible con Bluetooth® (KMB-001GR)</p>
+          <p class="producto-precio">S/ 49.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3165/1_1000.jpg?t=1731361442613" alt="Producto 73">
+        <div class="producto-info">
+          <h3>XTech® Mouses</h3>
+          <p>Xtech Marvel Spider-Man Mouse óptico de 7 botones para videojuegos XTM-M520SM</p>
+          <p class="producto-precio">S/ 69.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3140/1_1000.jpg?t=1729699889055" alt="Producto 74">
+        <div class="producto-info">
+          <h3>Redragon® Mouses</h3>
+          <p>Mouse Gamer Inalámbrico Redragon Gainer M656</p>
+          <p class="producto-precio">S/ 99.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3136/2_1000.jpg?t=1729697606192" alt="Producto 75">
+        <div class="producto-info">
+          <h3>Redragon® Mouses</h3>
+          <p>Mouse Gamer Inalámbrico Redragon K1NG Pro 4000 Hz Negro</p>
+          <p class="producto-precio">S/ 319.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3139/1_1000.jpg?t=1729699650577" alt="Producto 76">
+        <div class="producto-info">
+          <h3>Redragon® Mouses</h3>
+          <p>Mouse Gamer Redragon K1NG M724 1000 Hz Negro</p>
+          <p class="producto-precio">S/ 99.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3134/1_1000.jpg?t=1729696899542" alt="Producto 78">
+        <div class="producto-info">
+          <h3>Redragon® Mouses</h3>
+          <p>Mouse Gamer Inalámbrico Redragon K1NG Pro 1000 Hz Negro</p>
+          <p class="producto-precio">S/ 239.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2851/1_1000.jpg?t=1738876830945" alt="Producto 79">
+        <div class="producto-info">
+          <h3>Redragon Mouses</h3>
+          <p>Mouse Gamer Inalámbrico Redragon Invader Pro M719 RGB Negro</p>
+          <p class="producto-precio">S/ 179.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2667/1_1000.jpg?t=1738876472332" alt="Producto 80">
+        <div class="producto-info">
+          <h3>Logitech® Mouses</h3>
+          <p>Mouse inalámbrico Bluetooth M240 Rosado</p>
+          <p class="producto-precio">S/ 84.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2666/1_1000.jpg?t=1738876470398" alt="Producto 81">
+        <div class="producto-info">
+          <h3>Logitech® Mouses</h3>
+          <p>Mouse Wireless Bluetooth M240 Negro</p>
+          <p class="producto-precio">S/ 84.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2663/1_1000.jpg?t=1738876464473" alt="Producto 82">
+        <div class="producto-info">
+          <h3>Targus® Mouses</h3>
+          <p>Mouse Targus inalámbrico B584 Bluetrace Ergonómico Negro AMW584GL</p>
+          <p class="producto-precio">S/ 199.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2647/1_1000.jpg?t=1738876432830" alt="Producto 83">
+        <div class="producto-info">
+          <h3>Targus® Mouses</h3>
+          <p>Mouse Targus inalámbrico Negro AMW575</p>
+          <p class="producto-precio">S/ 64.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="CPU Intel s1700" data-brand="Intel" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3697/1_1000.jpg?t=1747320601413" alt="Producto 84">
+        <div class="producto-info">
+          <h3>Intel® CPU Intel s1700</h3>
+          <p>Procesador Intel Core i7-12700 hasta 4.9Ghz 25MB_Cache LGA1700 con video Intel UHD Graphics 770</p>
+          <p class="producto-precio">S/ 1,559.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('CPU Intel s1700')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('CPU Intel s1700', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Mouses" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2558/1_1000.jpg?t=1738876249169" alt="Producto 85">
+        <div class="producto-info">
+          <h3>Spektra® Mouses</h3>
+          <p>Mouse MS-900W Óptico Wireless Negro</p>
+          <p class="producto-precio">S/ 29.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Mouses')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Mouses', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3599/1_1000.jpg?t=1743546385403" alt="Producto 86">
+        <div class="producto-info">
+          <h3>Spektra® Teclados</h3>
+          <p>Teclado Bluetooth para Celular Spektra Negro</p>
+          <p class="producto-precio">S/ 29.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3174/1_1000.jpg?t=1731364661266" alt="Producto 87">
+        <div class="producto-info">
+          <h3>Klip® Teclados</h3>
+          <p>Teclado premium ergonómico e inalámbrico Transcend modelo KBK-530S</p>
+          <p class="producto-precio">S/ 179.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3159/3_1000.jpg?t=1729800240978" alt="Producto 88">
+        <div class="producto-info">
+          <h3>CoolerMaster® Teclados</h3>
+          <p>Teclado Gamer mecanico Inalámbrico para juegos MK770 modelo "Macaron"</p>
+          <p class="producto-precio">S/ 539.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3137/4_1000.jpg?t=1729698837738" alt="Producto 89">
+        <div class="producto-info">
+          <h3>Redragon® Teclados</h3>
+          <p>Teclado Redragon EISA K686-RGB-PRO Wireless English WB WHITE/BLUE</p>
+          <p class="producto-precio">S/ 379.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3135/1_1000.jpg?t=1733239494135" alt="Producto 90">
+        <div class="producto-info">
+          <h3>Redragon® Teclados</h3>
+          <p>Teclado Gamer Inalámbrico Redragon Fizz Pro Español Blanco/Gris (K616-RGB)</p>
+          <p class="producto-precio">S/ 279.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2349/1_1000.jpg?t=1738875785254" alt="Producto 91">
+        <div class="producto-info">
+          <h3>Redragon® Teclados</h3>
+          <p>Teclado Gamer Redragon Mitra Español Negro (K551RGB)</p>
+          <p class="producto-precio">S/ 279.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="S/ 259.90">
+        <img src="https://www.pcfactory.com.pe/public/foto/2348/1_1000.jpg?t=1738875782467" alt="Teclados">
+        <div class="producto-info">
+          <h3>Redragon® Teclados</h3>
+          <p>Teclado Gamer Español Kumara Negro - Red Switch (K552RGB)</p>
+          <p class="producto-precio">S/ 259.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2347/1_1000.jpg?t=1738875779263" alt="Producto 93">
+        <div class="producto-info">
+          <h3>Redragon® Teclados</h3>
+          <p>Teclado Gamer Español Kumara Negro - Blue Switch (K552RGB)</p>
+          <p class="producto-precio">S/ 259.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Audífonos Gamer" data-brand="Sony" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3434/1_1000.jpg?t=1738723305246" alt="Producto 94">
+        <div class="producto-info">
+          <h3>Sony® Audífonos Gamer</h3>
+          <p>Audífonos Gamer con micrófono INZONE H3</p>
+          <p class="producto-precio">S/ 249.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Audífonos Gamer')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Audífonos Gamer', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+            <div class="producto-card" data-name="Audífonos Headset" data-brand="Sony" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/3421/1_1000.jpg?t=1743388146898" alt="Producto 94">
+        <div class="producto-info">
+          <h3>Sony® Audífonos Headset</h3>
+          <p>Audífonos Over Ear Inalámbricos con Noise Cancelling ULT WEAR Negro</p>
+          <p class="producto-precio">S/ 599.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Audífonos Headset')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Audífonos Headset', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2346/1_1000.jpg?t=1738875776093" alt="Producto 95">
+        <div class="producto-info">
+          <h3>Redragon® Teclados</h3>
+          <p>Teclado Gamer Español Kumara Blanco - Red Switch (K552W-RGB)</p>
+          <p class="producto-precio">S/ 259.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2345/1_1000.jpg?t=1738875772962" alt="Producto 96">
+        <div class="producto-info">
+          <h3>Redragon® Teclados</h3>
+          <p>Teclado Gamer Español Kumara Rainbow Blanco (K552W-KR-SP)</p>
+          <p class="producto-precio">S/ 219.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2344/1_1000.jpg?t=1738875770026" alt="Producto 97">
+        <div class="producto-info">
+          <h3>Redragon® Teclados</h3>
+          <p>Teclado Gamer Español Kumara Rainbow Negro (K552-KR-SP)</p>
+          <p class="producto-precio">S/ 219.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2278/2_1000.jpg?t=1697646341545" alt="Producto 98">
+        <div class="producto-info">
+          <h3>Primus Gaming® Teclados</h3>
+          <p>Teclado Gamer Ahsoka BALLISTA 90T</p>
+          <p class="producto-precio">S/ 349.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2013/1_1000.jpg?t=1689952132967" alt="Producto 99">
+        <div class="producto-info">
+          <h3>Spektra® Teclados</h3>
+          <p>Teclado KB-700W Multimedia Wireless Negro</p>
+          <p class="producto-precio">S/ 29.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/2011/1_1000.jpg?t=1689952114633" alt="Producto 100">
+        <div class="producto-info">
+          <h3>Spektra® Teclados</h3>
+          <p>Teclado KB-500 con Number Pad USB Negro</p>
+          <p class="producto-precio">S/ 29.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="producto-card" data-name="Teclados" data-brand="Todas las marcas" data-price="129.99">
+        <img src="https://www.pcfactory.com.pe/public/foto/1874/1_1000.jpg?t=1729699974828" alt="Producto 101">
+        <div class="producto-info">
+          <h3>Gear Gamer® Teclados</h3>
+          <p>Teclado Gamer RGB Centurion Mecánico Ingles</p>
+          <p class="producto-precio">S/ 119.90</p>
+          <div class="producto-buttons">
+            <button class="btn" onclick="addToCart('Teclados')">
+              <i class="fas fa-shopping-cart"></i> Agregar al carrito
+            </button>
+            <button class="btn-like" onclick="toggleFavorite('Teclados', this)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      
+  
+  <!-- Modal de Favoritos -->
+<div id="favoritesModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="toggleFavoritesModal()">&times;</span>
+      <h2>Favoritos</h2>
+      <div class="favorites-list" id="favoritesList">
+        <!-- Aquí se mostrarán los productos favoritos -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal del Carrito -->
+  <div id="cartModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="toggleCartModal()">&times;</span>
+      <h2>Carrito</h2>
+      <div class="cart-list" id="cartList">
+        <!-- Aquí se mostrarán los productos del carrito -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- Font Awesome JS para íconos -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script>
+    // Arreglos para almacenar el carrito y favoritos
+    let favorites = [];
+    let cart = [];
+    
+    // Función para agregar productos al carrito
+    function addToCart(productName) {
+      cart.push(productName);
+      alert(productName + ' añadido al carrito.');
+      console.log('Carrito:', cart);
+      updateCartList();
+    }
+    
+    // Función para alternar productos en favoritos
+    function toggleFavorite(productName, btn) {
+      const index = favorites.indexOf(productName);
+      if (index === -1) {
+        favorites.push(productName);
+        btn.classList.add('favorited');
+        alert(productName + ' agregado a favoritos.');
+      } else {
+        favorites.splice(index, 1);
+        btn.classList.remove('favorited');
+        alert(productName + ' eliminado de favoritos.');
+      }
+      updateFavoritesList();
+      console.log('Favoritos:', favorites);
+    }
+    
+    // Función para actualizar el listado de favoritos
+    function updateFavoritesList() {
+      const favoritesList = document.getElementById('favoritesList');
+      favoritesList.innerHTML = '';
+      if (favorites.length === 0) {
+        favoritesList.innerHTML = '<p>No tienes productos favoritos.</p>';
+      } else {
+        favorites.forEach(product => {
+          const div = document.createElement('div');
+          div.className = 'favorite-item';
+          div.innerHTML = product + ' <button onclick="removeFavorite(\'' + product + '\')">&times;</button>';
+          favoritesList.appendChild(div);
+        });
+      }
+    }
+    
+    // Función para remover un producto de favoritos
+    function removeFavorite(productName) {
+      favorites = favorites.filter(prod => prod !== productName);
+      // Remover la clase "favorited" de los botones relacionados
+      const buttons = document.querySelectorAll('.btn-like');
+      buttons.forEach(btn => {
+        const card = btn.closest('.producto-card');
+        if (card && card.getAttribute('data-name') === productName) {
+          btn.classList.remove('favorited');
+        }
+      });
+      updateFavoritesList();
+    }
+    
+    // Función para alternar la visualización del modal de favoritos
+    function toggleFavoritesModal() {
+      const modal = document.getElementById('favoritesModal');
+      modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+    }
+    
+    // NUEVAS FUNCIONES PARA EL CARRITO
+    
+    // Función para actualizar el listado del carrito en el modal
+    function updateCartList() {
+      const cartList = document.getElementById('cartList');
+      cartList.innerHTML = '';
+      if (cart.length === 0) {
+        cartList.innerHTML = '<p>No tienes productos en el carrito.</p>';
+      } else {
+        cart.forEach(product => {
+          const div = document.createElement('div');
+          div.className = 'cart-item';
+          div.innerHTML = product + ' <button onclick="removeFromCart(\'' + product + '\')">&times;</button>';
+          cartList.appendChild(div);
+        });
+      }
+    }
+    
+    // Función para remover un producto del carrito
+    function removeFromCart(productName) {
+      cart = cart.filter(prod => prod !== productName);
+      updateCartList();
+      console.log('Carrito:', cart);
+    }
+    
+    // Función para alternar la visualización del modal del carrito
+    function toggleCartModal() {
+      const modal = document.getElementById('cartModal');
+      modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+    }
+    
+    // Funcionalidad para búsqueda y filtros
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const query = this.value.toLowerCase();
+      const products = document.querySelectorAll('.producto-card');
+      products.forEach(product => {
+        const name = product.getAttribute('data-name').toLowerCase();
+        product.style.display = name.includes(query) ? 'flex' : 'none';
+      });
+    });
+    
+    document.getElementById('filterBrand').addEventListener('change', function() {
+      const brand = this.value.toLowerCase();
+      const products = document.querySelectorAll('.producto-card');
+      products.forEach(product => {
+        const productBrand = product.getAttribute('data-brand').toLowerCase();
+        product.style.display = (brand === '' || productBrand === brand) ? 'flex' : 'none';
+      });
+    });
+    
+    document.getElementById('filterPrice').addEventListener('change', function() {
+      const priceFilter = this.value;
+      const products = document.querySelectorAll('.producto-card');
+      products.forEach(product => {
+        const price = parseFloat(product.getAttribute('data-price'));
+        if (priceFilter === '') {
+          product.style.display = 'flex';
+        } else if (priceFilter === 'low' && price < 100) {
+          product.style.display = 'flex';
+        } else if (priceFilter === 'medium' && price >= 100 && price <= 500) {
+          product.style.display = 'flex';
+        } else if (priceFilter === 'high' && price > 500) {
+          product.style.display = 'flex';
+        } else {
+          product.style.display = 'none';
+        }
+      });
+    });
+  </script>
+  </body>
+  </html>
+  

@@ -1,0 +1,70 @@
+.calendario-widget {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.calendario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.calendario-dias {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.dia {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.dia:not(.vacio):hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.dia.seleccionado {
+    background: var(--primary-color);
+    color: white;
+}
+
+.dia.pasado {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.dia.hoy {
+    border: 2px solid var(--primary-color);
+}
+
+.modal-confirmacion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-contenido {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+}

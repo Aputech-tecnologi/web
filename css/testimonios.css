@@ -1,0 +1,46 @@
+.testimonios-seccion {
+    padding: 4rem 2rem;
+    background: var(--background-color);
+}
+
+.testimonios-carrusel {
+    display: flex;
+    transition: transform 0.5s ease;
+    width: 100%;
+    overflow: hidden;
+}
+
+.testimonio-slide {
+    min-width: 100%;
+    padding: 2rem;
+}
+
+.testimonio-contenido {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.testimonio-contenido img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.testimonio-calificacion {
+    color: #ffd700;
+    margin: 1rem 0;
+}
+
+.testimonio-calificacion .fa-star.activa {
+    color: #ffd700;
+}
+
+.testimonio-calificacion .fa-star {
+    color: #ddd;
+}

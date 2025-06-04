@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Contacto - APUTECH</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #fdfaf175; color: #333; }
+    a { text-decoration: none; color: inherit; }
+
+    .contact-header {
+      position: relative;
+      background: url('https://source.unsplash.com/1600x400/?office') no-repeat center/cover;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+    }
+    .contact-header::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image:linear-gradient(to bottom, rgba(238, 227, 182, 0.844), rgba(0, 0, 0, 0.5));
+      z-index: 0;
+      z-index: 1;
+    }
+    .header-container {
+      position: relative;
+      z-index: 2;
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+    .logo img { width: 150px; }
+    .header-message h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      color: #000;
+    }
+    .social-icons {
+      display: flex;
+      gap: 10px;
+    }
+    .social-icon {
+      width: 50px; height: 50px;
+      cursor: pointer;
+    }
+
+    .contact-info-section, .write-to-us, .locate-us, .our-specialty {
+      background: #d7d8c324;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 1200px;
+    }
+
+    .contact-info-section h2, .write-to-us h2, .our-specialty h2 {
+      color: #006837;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .info-icons {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .info-item {
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .info-item i {
+      font-size: 1.5rem;
+      color: #006837;
+      margin-bottom: 5px;
+    }
+
+    .motivational-text {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .contact-form {
+      width: 90%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-form .form-group {
+      margin-bottom: 15px;
+    }
+
+    .contact-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    .contact-form textarea { min-height: 120px; }
+
+    .recaptcha { text-align: center; margin: 15px 0; }
+
+    .btn-submit {
+      display: block;
+      width: 100%;
+      background: #006837;
+      color: #fff;
+      padding: 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn-submit:hover { background: #004f2c; }
+
+    .map-section iframe {
+      width: 100%;
+      height: 400px;
+      border: 0;
+    }
+
+    @media (max-width: 768px) {
+      .header-container { flex-direction: column; text-align: center; }
+      .social-icons { margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="contact-header">
+    <div class="header-container">
+      <div class="logo"><img src="../img/LOGO.png" alt="APUTECH"></div>
+      <div class="header-message"><h1>COMUNÍCATE CON NOSOTROS</h1></div>
+      <div class="social-icons">
+        <div class="social-icon" id="icon-facebook"></div>
+        <div class="social-icon" id="icon-youtube"></div>
+        <div class="social-icon" id="icon-instagram"></div>
+        <div class="social-icon" id="icon-whatsapp"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- INFO DE CONTACTO -->
+  <section class="contact-info-section">
+    <h2>CONTÁCTENOS</h2>
+    <div class="info-icons">
+      <div class="info-item"><i class="fas fa-map-marker-alt"></i><p>Urb. señor de los milagros abancay, apurimac</p></div>
+      <div class="info-item"><i class="fas fa-envelope"></i><p>aputech2013@gmail.com</p></div>
+      <div class="info-item"><i class="fas fa-phone"></i><p>+51 983 624 067</p></div>
+    </div>
+  </section>
+
+  <!-- FORMULARIO -->
+  <section class="write-to-us">
+    <h2>ESCRÍBENOS</h2>
+    <p class="motivational-text">Estaremos encantados de ayudarte</p>
+    <form class="contact-form" id="formularioContacto">
+      <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" required>
+      </div>
+      <div class="form-group">
+        <label for="telefono">Teléfono/Celular:</label>
+        <input type="tel" id="telefono" required>
+      </div>
+      <div class="form-group">
+        <label for="asunto">Asunto:</label>
+        <input type="text" id="asunto" required>
+      </div>
+      <div class="form-group">
+        <label for="mensaje">Mensaje:</label>
+        <textarea id="mensaje" required></textarea>
+      </div>
+      <div class="recaptcha">
+        <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+      </div>
+      <button type="submit" class="btn-submit">Enviar Mensaje</button>
+    </form>
+  </section>
+
+  <!-- MAPA -->
+  <section class="map-section">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1938.6865351897525!2d-72.89268795650737!3d-13.635055728025703!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x916d03b7e918d025%3A0x44e21bb559d5b299!2sAPUTECH%20(VENTA%20y%20SOPORTE%20TECNOL%C3%93GICO%20DE%3A%20Laptops%2C%20Computadoras%20e%20Impresoras.)!5e0!3m2!1ses-419!2spe!4v1741205164177!5m2!1ses-419!2spe" 
+      width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </section>
+
+  <!-- SCRIPTS -->
+  <script>
+    // Cargar animaciones Lottie
+    const icons = {
+      "icon-facebook": "https://assets10.lottiefiles.com/packages/lf20_0yfsb3a1.json",
+      "icon-youtube": "https://assets10.lottiefiles.com/packages/lf20_xlkxtmul.json",
+      "icon-instagram": "https://assets1.lottiefiles.com/packages/lf20_b88nh30c.json",
+      "icon-whatsapp": "https://assets10.lottiefiles.com/private_files/lf30_j2ura6ey.json"
+    };
+
+    Object.entries(icons).forEach(([id, path]) => {
+      lottie.loadAnimation({
+        container: document.getElementById(id),
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        path
+      });
+    });
+
+    // Inicializar los iconos como enlaces
+    document.getElementById('icon-facebook').addEventListener('click', () => window.open('https://facebook.com', '_blank'));
+    document.getElementById('icon-youtube').addEventListener('click', () => window.open('https://youtube.com', '_blank'));
+    document.getElementById('icon-instagram').addEventListener('click', () => window.open('https://instagram.com', '_blank'));
+    document.getElementById('icon-whatsapp').addEventListener('click', () => window.open('https://wa.me/51983624067', '_blank'));
+
+    // Validar reCAPTCHA y enviar a WhatsApp
+    document.getElementById('formularioContacto').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const recaptchaResponse = grecaptcha.getResponse();
+      if (!recaptchaResponse) {
+        alert('Por favor, verifica que no eres un robot.');
+        return;
+      }
+
+      const nombre = document.getElementById('nombre').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const telefono = document.getElementById('telefono').value.trim();
+      const asunto = document.getElementById('asunto').value.trim();
+      const mensaje = document.getElementById('mensaje').value.trim();
+
+      // Validación básica
+      if (!nombre || !email || !telefono || !asunto || !mensaje) {
+        alert('Por favor, completa todos los campos del formulario.');
+        return;
+      }
+
+      const textoFormateado = `📩 *NUEVO MENSAJE DE CONTACTO* 📩\n\n` +
+  `*Datos del contacto:*\n` +
+  `───────────────────\n` +
+  `👤 *Nombre:* ${nombre}\n` +
+  `📧 *Email:* ${email}\n` +
+  `📞 *Teléfono:* ${telefono}\n\n` +
+  `*Detalles del mensaje:*\n` +
+  `───────────────────\n` +
+  `📝 *Asunto:* ${asunto}\n` +
+  `💬 *Mensaje:*\n${mensaje}\n\n` +
+  `📨 Enviado desde el formulario de contacto de APUTECH.`;
+
+const mensajeCodificado = encodeURIComponent(textoFormateado);
+const numeroWhatsApp = "51983624067";
+
+// ✅ Usar la versión web de WhatsApp que interpreta mejor emojis
+const url = `https://web.whatsapp.com/send?phone=${numeroWhatsApp}&text=${mensajeCodificado}`;
+
+window.open(url, '_blank');
+document.getElementById('formularioContacto').reset();
+grecaptcha.reset();
+
+    });
+  </script>
+
+</body>
+</html>
